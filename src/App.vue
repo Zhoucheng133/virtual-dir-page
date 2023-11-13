@@ -2,12 +2,16 @@
   <div id="app">
     <div class="main">
       <div class="head">
-        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" style="margin-right: 2px;">Root</div>
+        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
           <div style="margin-right: 2px; user-select: none;">></div>
-          <div style="margin-right: 2px;" :style="{ 'font-weight' : index==dir.length-1 ? 'bold' : 'light' }" :class="dir.length-1==index ? 'itemDir_end' : 'itemDir'">{{ item }}</div>
+          <div :class="dir.length-1==index ? 'itemDir_end' : 'itemDir'">{{ item }}</div>
         </div>
       </div>
+      <div class="tools">
+        
+      </div>
+      <div class="body"></div>
     </div>
   </div>
 </template>
@@ -49,10 +53,13 @@ export default {
 
 <style>
 .itemDir_end{
-  user-select: none;
-  padding: 0px 7px 0px 7px;
+  font-weight: bold;
 }
 .itemDir{
+  font-weight: lighter;
+}
+.itemDir, .itemDir_end{
+  margin-right: 2px;
   user-select: none;
   transition: all linear .2s;
   border-radius: 5px;
