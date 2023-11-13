@@ -1,18 +1,28 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <video id="player" playsinline controls src="http://192.168.101.105:8081/osuRecord/rePlay/osu26.mp4" width="1000px"></video>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+// const axios=require("axios");
+import Plyr from 'plyr';
+import 'plyr/dist/plyr.css';
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  data() {
+    return {
+      player: undefined,
+    }
+  },
+  methods: {
+    
+  },
+  created() {
+    
+  },
+  mounted() {
+    this.player = new Plyr('#player');
+  },
 }
 </script>
 
@@ -23,6 +33,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
