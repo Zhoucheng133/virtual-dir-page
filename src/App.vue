@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <video id="player" playsinline controls src="http://192.168.101.105:8081/osuRecord/rePlay/osu26.mp4" width="1000px"></video>
+    <div style="width: 1000px;">
+      <video id="player" playsinline controls src="http://192.168.101.105:8081/osuRecord/rePlay/osu26.mp4"></video>
+    </div>
   </div>
 </template>
 
 <script>
-// const axios=require("axios");
+const axios=require("axios");
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 export default {
