@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="main">
-      <div class="head">
+      <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
           <div style="margin-right: 2px; user-select: none;">></div>
@@ -9,7 +9,10 @@
         </div>
       </div>
       <div class="tools">
-        
+        <div class="upload_button">上传</div>
+        <div class="newFolder_button">新建文件夹</div>
+        <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'">重命名</div>
+        <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
       <div class="body"></div>
     </div>
@@ -30,6 +33,8 @@ export default {
       list: [],
       // 当前目录位置
       dir: [],
+      // 选中的文件/文件夹
+      selectedList: [],
     }
   },
   methods: {
@@ -37,21 +42,58 @@ export default {
   },
   created() {
     document.title="虚拟目录";
-    // const path = window.location.pathname;
-    console.log(window.location.pathname);
-    const path="/index/page/newpage/1";
+    const path="/index/page/newpage/test1/test2";
     this.dir=path.split('/').filter(Boolean);
-    console.log(this.dir);
   },
   mounted() {
     this.player = new Plyr('#player');
     this.list=JSON.parse(data.data);
-    // console.log(this.list);
+    // 自动滚动到最右边
+    this.$refs.headRef.scrollTo({
+      left: this.$refs.headRef.scrollWidth,
+      behavior: 'smooth',
+    });
   },
 }
 </script>
 
 <style>
+.rename_button_disabled, .del_button_disabled{
+  cursor: not-allowed;
+}
+.rename_button_disabled, .del_button_disabled{
+  color: grey;
+}
+.upload_button, .newFolder_button, .rename_button, .rename_button_disabled, .del_button_disabled{
+  margin-right: 10px;
+}
+.upload_button, .newFolder_button, .rename_button, .del_button, .rename_button_disabled, .del_button_disabled{
+  user-select: none;
+  transition: all ease-in-out .2s;
+}
+.newFolder_button:hover, .rename_button:hover{
+  color: rgb(24, 144, 255);
+  cursor: pointer;
+}
+.del_button:hover{
+  color: red;
+  cursor: pointer;
+}
+.upload_button{
+  background-color: rgb(24, 144, 255);
+  color: white;
+  padding: 5px 10px 5px 10px;
+  border-radius: 6px;
+}
+.upload_button:hover{
+  background-color: rgb(0, 108, 210);
+  cursor: pointer;
+}
+.tools{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
 .itemDir_end{
   font-weight: bold;
 }
@@ -71,10 +113,12 @@ export default {
   color: rgb(24, 144, 255);
 }
 .head{
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 20px;
   display: flex;
   align-items: center;
+  overflow: auto;
+  padding-bottom: 10px;
 }
 .main{
   width: 800px;
