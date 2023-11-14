@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     this.player = new Plyr('#player');
-    this.list=JSON.parse(data.data);
+    this.list=JSON.parse(data.data).filter(item => !item.name.startsWith('.'));
     // 自动滚动到最右边
     this.$refs.headRef.scrollTo({
       left: this.$refs.headRef.scrollWidth,
