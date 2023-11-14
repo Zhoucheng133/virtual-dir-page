@@ -22,8 +22,10 @@
           <div>大小</div>
         </div>
         <div class="fileItem" v-for="(item, index) in list" :key="index">
-          <div class="tick"></div>
-          <div class="icon"></div>
+          <div class="tick"><a-checkbox @change="selectFile(item)"></a-checkbox></div>
+          <div class="icon">
+            <img :src="getIconSrc(item)" width="30px">
+          </div>
           <div class="fileName">{{ item.name }}</div>
           <div class="size">{{ formatBytes(item.size) }}</div>
         </div>
@@ -51,6 +53,104 @@ export default {
     }
   },
   methods: {
+    getIconSrc(file){
+      var type=this.getFileType(file);
+      switch(type){
+        case 'image':
+          return require('@/assets/fileIcons/image.svg');
+        case 'folder':
+          return require('@/assets/fileIcons/folder.svg');
+        case 'document':
+          return require('@/assets/fileIcons/word.svg');
+        case 'pdf':
+          return require('@/assets/fileIcons/pdf.svg');
+        case 'audio':
+          return require('@/assets/fileIcons/audio.svg');
+        case 'zip':
+          return require('@/assets/fileIcons/zip.svg');
+        case 'ppt':
+          return require('@/assets/fileIcons/ppt.svg');
+        case 'txt':
+          return require('@/assets/fileIcons/txt.svg');
+        case 'video':
+          return require('@/assets/fileIcons/video.svg');
+        case 'html':
+          return require('@/assets/fileIcons/html.svg');
+        case 'xls':
+          return require('@/assets/fileIcons/xls.svg');
+        case 'bt':
+          return require('@/assets/fileIcons/bt.svg');
+        case 'unknown':
+          return require('@/assets/fileIcons/unkown.svg');
+      }
+    },
+    selectFile(item){
+      // 选中了某个文件
+      console.log(item);
+    },
+    getFileType(file) {
+      if (file.type=='dir') {
+        return 'folder';
+      }
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      // 如果没有后缀名判断为文件夹
+      switch (fileExtension) {
+        case 'png':
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+          return 'image';
+        case 'xls':
+        case 'xlsx':
+          return 'xls'
+        case 'txt':
+        case 'c':
+        case 'cpp':
+        case 'swift':
+        case 'java':
+        case 'dart':
+        case 'vue':
+        case 'css':
+        case 'js':
+        case 'json':
+        case 'md':
+        case 'php':
+        case 'py':
+        case 'ruby':
+        case 'cs':
+        case 'sql':
+        case 'go':
+          return 'txt'
+        case 'doc':
+        case 'docx':
+          return 'document';
+        case 'html':
+          return 'html';
+        case 'ppt':
+        case 'pptx':
+          return 'ppt';
+        case '7z':
+        case 'rar':
+        case 'zip':
+          return 'zip';
+        case 'mp3':
+        case 'wav':
+        case 'ogg':
+          return 'audio';
+        case 'mp4':
+        case 'avi':
+        case 'mkv':
+        case 'mov':
+          return 'video';
+        case 'pdf':
+          return 'pdf';
+        case 'bt':
+          return 'bt';
+        default:
+          return 'unknown';
+      }
+    },
+    // 格式化文件大小显示
     formatBytes(bytes) {
       if(bytes==undefined){
         return "";
@@ -81,19 +181,25 @@ export default {
 </script>
 
 <style>
+.fileName{
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+}
 .size{
   text-align: right;
 }
 .listTitle{
   width: 100%;
   display: grid;
-  grid-template-columns: 30px 50px auto 50px;
+  grid-template-columns: 30px 40px auto 50px;
   height: 50px;
   text-align: left;
   user-select: none;
   align-items: center;
   font-weight: bolder;
   padding-right: 10px;
+  padding-left: 10px;
 }
 .fileItem:hover{
   cursor: pointer;
@@ -102,7 +208,7 @@ export default {
 .fileItem{
   width: 100%;
   display: grid;
-  grid-template-columns: 30px 50px auto 100px;
+  grid-template-columns: 30px 40px auto 100px;
   height: 50px;
   text-align: left;
   user-select: none;
@@ -111,6 +217,7 @@ export default {
   transition: all ease-in-out .2s;
   font-weight: 400;
   padding-right: 10px;
+  padding-left: 10px;
 }
 .rename_button_disabled, .del_button_disabled{
   cursor: not-allowed;
