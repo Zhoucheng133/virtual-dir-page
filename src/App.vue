@@ -14,7 +14,20 @@
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
-      <div class="body"></div>
+      <div class="body">
+        <div class="fileItem listTitle">
+          <div></div>
+          <div></div>
+          <div>名称</div>
+          <div>大小</div>
+        </div>
+        <div class="fileItem" v-for="(item, index) in list" :key="index">
+          <div class="tick"></div>
+          <div class="icon"></div>
+          <div class="fileName">{{ item.name }}</div>
+          <div class="size">{{ item.size }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +71,20 @@ export default {
 </script>
 
 <style>
+.listTitle{
+  font-weight: bolder;
+  border-top: none !important;
+}
+.fileItem{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px 50px auto 50px;
+  height: 50px;
+  text-align: left;
+  user-select: none;
+  align-items: center;
+  border-top: 1px solid rgb(230, 230, 230);
+}
 .rename_button_disabled, .del_button_disabled{
   cursor: not-allowed;
 }
