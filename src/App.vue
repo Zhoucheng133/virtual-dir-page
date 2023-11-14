@@ -99,6 +99,9 @@ export default {
         case 'jpg':
         case 'jpeg':
         case 'gif':
+        case 'svg':
+        case 'psd':
+        case 'dng':
           return 'image';
         case 'xls':
         case 'xlsx':
@@ -132,10 +135,13 @@ export default {
         case '7z':
         case 'rar':
         case 'zip':
+        case 'tar':
+        case 'gz':
           return 'zip';
         case 'mp3':
         case 'wav':
         case 'ogg':
+        case 'flac':
           return 'audio';
         case 'mp4':
         case 'avi':
