@@ -22,7 +22,7 @@
           <div>大小</div>
         </div>
         <div class="fileItem" v-for="(item, index) in list" :key="index">
-          <div class="tick"><a-checkbox @change="selectFile(item)"></a-checkbox></div>
+          <div class="tick"><a-checkbox @change="selectFile(index)"></a-checkbox></div>
           <div class="icon">
             <img :src="getIconSrc(item)" width="30px">
           </div>
@@ -84,10 +84,19 @@ export default {
           return require('@/assets/fileIcons/unkown.svg');
       }
     },
-    selectFile(item){
-      // 选中了某个文件
-      console.log(item);
+    selectFile(index){
+      if(this.list[index].selected){
+        this.list[index].selected=false;
+        this.selectedList=this.selectedList.filter((item) => {
+          return item.name != this.list[index].name
+        });
+      }else{
+        this.list[index].selected=true;
+        this.selectedList.push(this.list[index]);
+      }
+      // console.log(this.selectedList);
     },
+    // 判断格式
     getFileType(file) {
       if (file.type=='dir') {
         return 'folder';
