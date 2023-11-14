@@ -15,7 +15,7 @@
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
       <div class="body">
-        <div class="fileItem listTitle">
+        <div class="listTitle">
           <div></div>
           <div></div>
           <div>名称</div>
@@ -25,7 +25,7 @@
           <div class="tick"></div>
           <div class="icon"></div>
           <div class="fileName">{{ item.name }}</div>
-          <div class="size">{{ item.size }}</div>
+          <div class="size">{{ formatBytes(item.size) }}</div>
         </div>
       </div>
     </div>
@@ -51,7 +51,17 @@ export default {
     }
   },
   methods: {
-    
+    formatBytes(bytes) {
+      if(bytes==undefined){
+        return "";
+      }
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      if (bytes === 0){
+        return '0 Byte';
+      }
+      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
+      return Math.round((bytes / Math.pow(1000, i)) * 100) / 100 + ' ' + sizes[i];
+    }
   },
   created() {
     document.title="虚拟目录";
@@ -71,11 +81,10 @@ export default {
 </script>
 
 <style>
-.listTitle{
-  font-weight: bolder;
-  border-top: none !important;
+.size{
+  text-align: right;
 }
-.fileItem{
+.listTitle{
   width: 100%;
   display: grid;
   grid-template-columns: 30px 50px auto 50px;
@@ -83,7 +92,25 @@ export default {
   text-align: left;
   user-select: none;
   align-items: center;
-  border-top: 1px solid rgb(230, 230, 230);
+  font-weight: bolder;
+  padding-right: 10px;
+}
+.fileItem:hover{
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+}
+.fileItem{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px 50px auto 100px;
+  height: 50px;
+  text-align: left;
+  user-select: none;
+  align-items: center;
+  border-top: 1px solid rgb(245, 245, 245);
+  transition: all ease-in-out .2s;
+  font-weight: 400;
+  padding-right: 10px;
 }
 .rename_button_disabled, .del_button_disabled{
   cursor: not-allowed;
