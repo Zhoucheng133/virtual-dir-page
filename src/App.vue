@@ -14,6 +14,9 @@
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
+      <div class="tools" style="margin-top: 15px;margin-left: 10px;">
+        <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目)</a-checkbox>
+      </div>
       <div class="body">
         <div class="listTitle">
           <div></div>
@@ -22,7 +25,7 @@
           <div>大小</div>
         </div>
         <div class="fileItem" v-for="(item, index) in list" :key="index">
-          <div class="tick"><a-checkbox @change="selectFile(index)"></a-checkbox></div>
+          <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
           <div class="icon">
             <img :src="getIconSrc(item)" width="30px">
           </div>
@@ -50,9 +53,35 @@ export default {
       dir: [],
       // 选中的文件/文件夹
       selectedList: [],
+      // 全选
+      selectAll_prop: false,
     }
   },
   methods: {
+    isIndeterminate(){
+      return this.selectedList.length!=this.list.length && this.selectedList.length!=0 ? true : false;
+    },
+    isAllSelected(){
+      return this.selectedList.length==this.list.length ? true : false;
+    },
+    // 全选操作
+    selectAll(e){
+      if(e.target.checked){
+        this.selectAll_prop=true;
+        this.selectedList=[];
+        for (const item of this.list) {
+          item.selected=true;
+          this.selectedList.push(item);
+        }
+      }else{
+        this.selectAll_prop=false;
+        for (const item of this.list) {
+          item.selected=false;
+          this.selectedList=[];
+        }
+      }
+    }, 
+    // 获取图标
     getIconSrc(file){
       var type=this.getFileType(file);
       switch(type){
@@ -84,6 +113,7 @@ export default {
           return require('@/assets/fileIcons/unkown.svg');
       }
     },
+    // 选择文件/文件夹
     selectFile(index){
       if(this.list[index].selected){
         this.list[index].selected=false;
@@ -208,7 +238,7 @@ export default {
   width: 100%;
   display: grid;
   grid-template-columns: 30px 40px auto 50px;
-  height: 50px;
+  height: 30px;
   text-align: left;
   user-select: none;
   align-items: center;
@@ -269,6 +299,7 @@ export default {
   margin-top: 5px;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 .itemDir_end{
   font-weight: bold;
