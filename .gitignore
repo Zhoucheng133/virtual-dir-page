@@ -23,3 +23,4 @@ pnpm-debug.log*
 *.sw?
 
 src/_tmp.js
+test.js
