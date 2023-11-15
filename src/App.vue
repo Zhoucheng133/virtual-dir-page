@@ -84,24 +84,7 @@ export default {
   methods: {
     // 下载文件
     downloadHandler(){
-      const link=window.location.origin+"/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
-
-      // const url = new URL(link);
-      const fileName = this.nowView.name;
-      fetch(link).then(res => {
-        res.blob().then(blob => {
-          const blobUrl = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          const name = fileName;
-          a.style.display = 'none';
-          a.href = blobUrl;
-          a.download = name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(blobUrl);
-        })
-      })
+      document.location.href="/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
     // 关闭预览
     closeView(){
