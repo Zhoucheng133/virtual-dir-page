@@ -264,7 +264,6 @@ export default {
   },
   created() {
     document.title="虚拟目录";
-    this.dir=this.nowDir.split('/').filter(Boolean);
   },
   mounted() {
     this.player = new Plyr('#player');
