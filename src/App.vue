@@ -34,16 +34,20 @@
         </div>
       </div>
     </div>
-    <div class="fileViewer">
+    <!-- 预览界面 -->
+    <div class="fileViewer" v-if="showView">
       <div class="infoBar">
         <div class="viewer_fileName">{{ nowView.name }}</div>
         <div></div>
         <div class="viewer_download">
           <div class="viewer_downloadBt">下载</div>
         </div>
-        <div class="viewer_close">
+        <div class="viewer_close" @click="closeView">
           x
         </div>
+      </div>
+      <div class="viewer_main">
+        <video id="player" playsinline controls :src="fileLinkGet()"></video>
       </div>
     </div>
   </div>
@@ -70,15 +74,20 @@ export default {
       // 当前目录
       nowDir: '',
       // 当前预览的文件
-      nowView: {
-        "type": "file",
-        "name": "Mac (Intel).zipaskl.dfhkjasdhfiajksdhfkhjjkkdsfhjkkasfasdkfjghahsdkjfjasdfdjk",
-        "size": 79898643,
-        "selected": false
-      },
+      nowView: {},
+      // 展示预览界面
+      showView: false,
     }
   },
   methods: {
+    // 关闭预览
+    closeView(){
+      this.showView=false;
+    },
+    // 获取到文件地址
+    fileLinkGet(){
+      return "/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
+    },
     // 跳转到某个目录
     toDir(dist){
       if(dist==-1){
@@ -107,7 +116,13 @@ export default {
         this.dir=this.nowDir.split('/').filter(Boolean);
         this.getList();
       }else{
-        // TODO 预览/下载文件
+        // 注意! 根据情况展示
+        this.showView=true;
+        this.nowView=item;
+        var that=this;
+        this.$nextTick(() => {
+          that.player = new Plyr('#player');
+        });
       }
     },
 
@@ -285,8 +300,6 @@ export default {
     document.title="虚拟目录";
   },
   mounted() {
-    this.player = new Plyr('#player');
-
     this.getList();
 
     // 自动滚动到最右边
@@ -299,6 +312,17 @@ export default {
 </script>
 
 <style>
+#player{
+  width: 60vw;
+}
+.viewer_main{
+  width: 100vw;
+  height: calc(100vh - 50px);
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .viewer_close:hover{
   color: rgb(0, 108, 210);
   cursor: pointer;
