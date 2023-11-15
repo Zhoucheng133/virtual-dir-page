@@ -24,13 +24,15 @@
           <div>名称</div>
           <div>大小</div>
         </div>
-        <div class="fileItem" v-for="(item, index) in list" :key="index" @click="openItem(item)">
-          <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
-          <div class="icon">
-            <img :src="getIconSrc(item)" width="30px">
+        <div v-for="(item, index) in list" :key="index" @click="openItem(item)">
+          <div class="fileItem" v-if="!item.name.startsWith('.')">
+            <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
+            <div class="icon">
+              <img :src="getIconSrc(item)" width="30px">
+            </div>
+            <div class="fileName">{{ item.name }}</div>
+            <div class="size">{{ formatBytes(item.size) }}</div>
           </div>
-          <div class="fileName">{{ item.name }}</div>
-          <div class="size">{{ formatBytes(item.size) }}</div>
         </div>
       </div>
     </div>
