@@ -2,10 +2,10 @@
   <div id="app">
     <div class="main">
       <div class="head" ref="headRef">
-        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(0)">Root</div>
+        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
           <div style="margin-right: 2px; user-select: none;">></div>
-          <div :class="dir.length-1==index ? 'itemDir_end' : 'itemDir'">{{ item }}</div>
+          <div :class="dir.length-1==index ? 'itemDir_end' : 'itemDir'" @click="toDir(index)">{{ item }}</div>
         </div>
       </div>
       <div class="tools">
@@ -61,9 +61,18 @@ export default {
   },
   methods: {
     toDir(dist){
-      if(dist==0){
+      if(dist==-1){
+        // 跳转到根目录
         this.nowDir="";
         this.dir=[];
+        this.getList();
+      }else{
+        this.dir=this.dir.slice(0, dist+1);
+        this.nowDir="";
+        for (const item of this.dir) {
+          this.nowDir+="/";
+          this.nowDir+=item;
+        }
         this.getList();
       }
     },
