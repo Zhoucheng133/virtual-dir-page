@@ -24,7 +24,7 @@
           <div>名称</div>
           <div>大小</div>
         </div>
-        <div class="fileItem" v-for="(item, index) in list" :key="index">
+        <div class="fileItem" v-for="(item, index) in list" :key="index" @click="openItem(item)">
           <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
           <div class="icon">
             <img :src="getIconSrc(item)" width="30px">
@@ -55,14 +55,19 @@ export default {
       selectedList: [],
       // 全选
       selectAll_prop: false,
+      // 当前目录
+      nowDir: '',
     }
   },
   methods: {
+    openItem(){
+
+    },
     isIndeterminate(){
       return this.selectedList.length!=this.list.length && this.selectedList.length!=0 ? true : false;
     },
     isAllSelected(){
-      return this.selectedList.length==this.list.length ? true : false;
+      return this.selectedList.length==this.list.length && this.list.length!=0 ? true : false;
     },
     // 全选操作
     selectAll(e){
@@ -206,6 +211,19 @@ export default {
       }
       const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
       return Math.round((bytes / Math.pow(1000, i)) * 100) / 100 + ' ' + sizes[i];
+    },
+    // 获取目录
+    getList(){
+      axios.get('/api/getlist', {
+        params: {
+          dir: this.nowDir
+        },
+      }).then((response)=>{
+        this.list=response.data.list;
+        // console.log(this.list);
+      }).catch(()=>{
+        this.$message.error("加载错误");
+      })
     }
   },
   created() {
@@ -215,7 +233,10 @@ export default {
   },
   mounted() {
     this.player = new Plyr('#player');
-    this.list=JSON.parse(data.data).filter(item => !item.name.startsWith('.'));
+    // this.list=JSON.parse(data.data).filter(item => !item.name.startsWith('.'));
+
+    this.getList();
+
     // 自动滚动到最右边
     this.$refs.headRef.scrollTo({
       left: this.$refs.headRef.scrollWidth,
