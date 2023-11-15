@@ -2,7 +2,7 @@
   <div id="app">
     <div class="main">
       <div class="head" ref="headRef">
-        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'">Root</div>
+        <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(0)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
           <div style="margin-right: 2px; user-select: none;">></div>
           <div :class="dir.length-1==index ? 'itemDir_end' : 'itemDir'">{{ item }}</div>
@@ -60,8 +60,22 @@ export default {
     }
   },
   methods: {
-    openItem(){
-
+    toDir(dist){
+      if(dist==0){
+        this.nowDir="";
+        this.dir=[];
+        this.getList();
+      }
+    },
+    openItem(item){
+      if(item.type=="dir"){
+        this.nowDir+='/';
+        this.nowDir+=item.name;
+        this.dir=this.nowDir.split('/').filter(Boolean);
+        this.getList();
+      }else{
+        // TODO 预览/下载文件
+      }
     },
     isIndeterminate(){
       return this.selectedList.length!=this.list.length && this.selectedList.length!=0 ? true : false;
@@ -228,8 +242,7 @@ export default {
   },
   created() {
     document.title="虚拟目录";
-    const path="/index/page/newpage/test1/test2";
-    this.dir=path.split('/').filter(Boolean);
+    this.dir=this.nowDir.split('/').filter(Boolean);
   },
   mounted() {
     this.player = new Plyr('#player');
