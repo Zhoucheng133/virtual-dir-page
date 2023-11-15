@@ -34,6 +34,18 @@
         </div>
       </div>
     </div>
+    <div class="fileViewer">
+      <div class="infoBar">
+        <div class="viewer_fileName">{{ nowView.name }}</div>
+        <div></div>
+        <div class="viewer_download">
+          <div class="viewer_downloadBt">下载</div>
+        </div>
+        <div class="viewer_close">
+          x
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,6 +69,13 @@ export default {
       selectAll_prop: false,
       // 当前目录
       nowDir: '',
+      // 当前预览的文件
+      nowView: {
+        "type": "file",
+        "name": "Mac (Intel).zipaskl.dfhkjasdhfiajksdhfkhjjkkdsfhjkkasfasdkfjghahsdkjfjasdfdjk",
+        "size": 79898643,
+        "selected": false
+      },
     }
   },
   methods: {
@@ -280,6 +299,68 @@ export default {
 </script>
 
 <style>
+.viewer_close:hover{
+  color: rgb(0, 108, 210);
+  cursor: pointer;
+}
+.viewer_close{
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  justify-content: center;
+  user-select: none;
+  transition: all ease-in-out .3s;
+}
+.viewer_download{
+  display: flex;
+  align-items: center;
+}
+.viewer_downloadBt:hover{
+  background-color: rgb(0, 108, 210);
+  cursor: pointer;
+}
+.viewer_downloadBt{
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  user-select: none;
+  border-radius: 5px;
+  background-color: rgb(24, 144, 255);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  transition: all ease-in-out .2s;
+}
+.viewer_fileName{
+  width: 100%;
+  text-align: left;
+  padding-left: 20px;
+  font-weight: bolder;
+  /* display: flex; */
+  /* justify-content: center; */
+  align-items: center;
+  font-size: 18px;
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  line-height: 50px;
+}
+.infoBar{
+  display: grid;
+  width: 100vw;
+  height: 50px;
+  grid-template-columns: 300px auto 50px 50px;
+}
+.fileViewer{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+}
 .fileName{
   overflow: hidden;
   white-space:nowrap;
