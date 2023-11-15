@@ -358,9 +358,6 @@ export default {
 .itemDir_end{
   font-weight: bold;
 }
-.itemDir{
-  font-weight: lighter;
-}
 .itemDir, .itemDir_end{
   margin-right: 2px;
   user-select: none;
