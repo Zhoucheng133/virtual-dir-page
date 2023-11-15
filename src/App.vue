@@ -60,6 +60,7 @@ export default {
     }
   },
   methods: {
+    // 跳转到某个目录
     toDir(dist){
       if(dist==-1){
         // 跳转到根目录
@@ -67,6 +68,7 @@ export default {
         this.dir=[];
         this.getList();
       }else{
+        // 跳转到某个目录
         this.dir=this.dir.slice(0, dist+1);
         this.nowDir="";
         for (const item of this.dir) {
@@ -76,8 +78,11 @@ export default {
         this.getList();
       }
     },
+
+    // 打开某个文件/目录
     openItem(item){
       if(item.type=="dir"){
+        // 如果是文件夹，进入文件夹
         this.nowDir+='/';
         this.nowDir+=item.name;
         this.dir=this.nowDir.split('/').filter(Boolean);
@@ -86,12 +91,15 @@ export default {
         // TODO 预览/下载文件
       }
     },
+
+    // 是否处于半选状态
     isIndeterminate(){
       return this.selectedList.length!=this.list.length && this.selectedList.length!=0 ? true : false;
     },
     isAllSelected(){
       return this.selectedList.length==this.list.length && this.list.length!=0 ? true : false;
     },
+
     // 全选操作
     selectAll(e){
       if(e.target.checked){
@@ -109,6 +117,7 @@ export default {
         }
       }
     }, 
+
     // 获取图标
     getIconSrc(file){
       var type=this.getFileType(file);
@@ -141,6 +150,7 @@ export default {
           return require('@/assets/fileIcons/unkown.svg');
       }
     },
+
     // 选择文件/文件夹
     selectFile(index){
       if(this.list[index].selected){
@@ -154,6 +164,7 @@ export default {
       }
       // console.log(this.selectedList);
     },
+
     // 判断格式
     getFileType(file) {
       if (file.type=='dir') {
@@ -223,6 +234,7 @@ export default {
           return 'unknown';
       }
     },
+
     // 格式化文件大小显示
     formatBytes(bytes) {
       if(bytes==undefined){
@@ -235,6 +247,7 @@ export default {
       const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
       return Math.round((bytes / Math.pow(1000, i)) * 100) / 100 + ' ' + sizes[i];
     },
+
     // 获取目录
     getList(){
       axios.get('/api/getlist', {
@@ -255,7 +268,6 @@ export default {
   },
   mounted() {
     this.player = new Plyr('#player');
-    // this.list=JSON.parse(data.data).filter(item => !item.name.startsWith('.'));
 
     this.getList();
 
