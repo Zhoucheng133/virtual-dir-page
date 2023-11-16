@@ -37,8 +37,8 @@
       </div>
     </div>
     <!-- 预览界面 -->
-    <div class="fileViewer" v-if="showView">
-      <div class="infoBar">
+    <div :class="goCloseView ? 'fileViewer_after':'fileViewer'" v-if="showView">
+      <div class="infoBar"> 
         <div class="viewer_fileName">{{ nowView.name }}</div>
         <div></div>
         <div class="viewer_download">
@@ -80,6 +80,8 @@ export default {
       nowView: {},
       // 展示预览界面
       showView: false,
+      // 动画中转变量
+      goCloseView: false,
     }
   },
   methods: {
@@ -87,14 +89,23 @@ export default {
     downloadHandler(){
       document.location.href="/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
+    
     // 关闭预览
     closeView(){
-      this.showView=false;
+      this.goCloseView=true;
+      var that=this;
+      setTimeout(() => {
+        that.showView=false;
+        that.goCloseView=false;
+      }, 200);
+      
     },
+
     // 获取到文件地址
     fileLinkGet(){
       return "/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
+
     // 跳转到某个目录
     toDir(dist){
       if(dist==-1){
@@ -126,10 +137,12 @@ export default {
         // 注意! 根据情况展示
         this.showView=true;
         this.nowView=item;
-        var that=this;
-        this.$nextTick(() => {
-          that.player = new Plyr('#player');
-        });
+        if(this.getFileType(this.selectFile)=='video' || this.getFileType(this.selectFile)=='audio'){
+          var that=this;
+          this.$nextTick(() => {
+            that.player = new Plyr('#player');
+          });
+        }
       }
     },
 
@@ -208,7 +221,9 @@ export default {
 
     // 判断格式
     getFileType(file) {
-      if (file.type=='dir') {
+      if(file==undefined){
+        return '';
+      }else if (file.type=='dir') {
         return 'folder';
       }
       const fileExtension = file.name.split('.').pop().toLowerCase();
@@ -322,6 +337,42 @@ export default {
 #player{
   width: 60vw;
 }
+@keyframes opacityOut {
+  0%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+@keyframes opacityIn{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+.fileViewer{
+  opacity: 0;
+  animation: opacityIn .2s forwards linear;
+}
+
+.fileViewer_after{
+  opacity: 1;
+  animation: opacityOut .2s forwards linear;
+}
+
+.fileViewer, .fileViewer_after{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
 .viewer_main{
   width: 100vw;
   height: calc(100vh - 50px);
@@ -383,14 +434,6 @@ export default {
   width: 100vw;
   height: 50px;
   grid-template-columns: 300px auto 50px 50px;
-}
-.fileViewer{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(255, 255, 255, 0.7);
 }
 .fileName{
   overflow: hidden;
