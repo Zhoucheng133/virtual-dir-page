@@ -382,7 +382,7 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .viewer_main{
@@ -445,6 +445,7 @@ export default {
   display: grid;
   width: 100vw;
   height: 50px;
+  background-color: white;
   grid-template-columns: 300px auto 50px 50px;
 }
 .fileName{
