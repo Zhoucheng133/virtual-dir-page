@@ -281,6 +281,7 @@ export default {
         case 'avi':
         case 'mkv':
         case 'mov':
+        case 'rmvb':
           return 'video';
         case 'pdf':
           return 'pdf';
