@@ -52,6 +52,7 @@
         <video id="player" class="video_player" playsinline controls :src="fileLinkGet()" v-if="getFileType(nowView)=='video'"></video>
         <audio id="player" class="audio_player" controls :src="fileLinkGet()" v-else-if="getFileType(nowView)=='audio'"></audio>
         <img class="image_viewer" :src="fileLinkGet()" v-else-if="getFileType(nowView)=='image'">
+        <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLinkGet()" frameborder="0"></iframe>
       </div>
     </div>
   </div>
@@ -88,6 +89,7 @@ export default {
   methods: {
     // 下载文件
     downloadHandler(){
+      // TODO 需要修改
       document.location.href="/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
     
@@ -336,6 +338,10 @@ export default {
 </script>
 
 <style>
+.pdf_viewer{
+	width: 100vw;
+	height: calc(100vh - 50px);
+}
 .image_viewer{
   max-width: 60vw;
   max-height: 60vh;
