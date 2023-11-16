@@ -337,7 +337,8 @@ export default {
 
 <style>
 .image_viewer{
-  width: 60vw;
+  max-width: 60vw;
+  max-height: 60vh;
 }
 
 .video_player{
