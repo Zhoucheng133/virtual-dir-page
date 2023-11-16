@@ -58,6 +58,10 @@
         <img v-else :src="getIconSrc(nowView)" width="150px">
       </div>
     </div>
+    <!-- 加载界面 -->
+    <div class="loadingView" v-if="isLoading">
+      Loading...
+    </div>
   </div>
 </template>
 
@@ -87,6 +91,8 @@ export default {
       showView: false,
       // 动画中转变量
       goCloseView: false,
+      // 显示加载中的界面
+      isLoading: false,
     }
   },
   methods: {
@@ -314,12 +320,14 @@ export default {
 
     // 获取目录
     getList(){
+      this.isLoading=true;
       axios.get('/api/getlist', {
         params: {
           dir: this.nowDir
         },
       }).then((response)=>{
         this.list=response.data.list;
+        this.isLoading=false;
         // console.log(this.list);
       }).catch(()=>{
         this.$message.error("加载错误");
@@ -342,6 +350,19 @@ export default {
 </script>
 
 <style>
+.loadingView{
+  background-color: rgba(255, 255, 255, 0.9);
+  height: 100vh;
+  width: 100vw;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
 .pdf_viewer{
 	width: 100vw;
 	height: calc(100vh - 50px);
@@ -387,6 +408,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: rgba(255, 255, 255, 0.9);
+  z-index: 10;
 }
 
 .viewer_main{
