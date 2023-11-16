@@ -49,8 +49,9 @@
         </div>
       </div>
       <div class="viewer_main">
-        <video id="player" playsinline controls :src="fileLinkGet()" v-if="getFileType(nowView)=='video'"></video>
-        <audio id="player" controls :src="fileLinkGet()" v-else-if="getFileType(nowView)=='audio'"></audio>
+        <video id="player" class="video_player" playsinline controls :src="fileLinkGet()" v-if="getFileType(nowView)=='video'"></video>
+        <audio id="player" class="audio_player" controls :src="fileLinkGet()" v-else-if="getFileType(nowView)=='audio'"></audio>
+        <img class="image_viewer" :src="fileLinkGet()" v-else-if="getFileType(nowView)=='image'">
       </div>
     </div>
   </div>
@@ -335,7 +336,11 @@ export default {
 </script>
 
 <style>
-#player{
+.image_viewer{
+  width: 60vw;
+}
+
+.video_player{
   width: 60vw;
 }
 @keyframes opacityOut {
