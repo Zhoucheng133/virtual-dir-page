@@ -53,6 +53,7 @@
         <audio id="player" class="audio_player" controls :src="fileLinkGet()" v-else-if="getFileType(nowView)=='audio'"></audio>
         <img class="image_viewer" :src="fileLinkGet()" v-else-if="getFileType(nowView)=='image'">
         <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLinkGet()" frameborder="0"></iframe>
+        <img v-else :src="getIconSrc(nowView)" width="150px">
       </div>
     </div>
   </div>
