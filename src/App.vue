@@ -49,7 +49,8 @@
         </div>
       </div>
       <div class="viewer_main">
-        <video id="player" playsinline controls :src="fileLinkGet()"></video>
+        <video id="player" playsinline controls :src="fileLinkGet()" v-if="getFileType(nowView)=='video'"></video>
+        <audio id="player" controls :src="fileLinkGet()" v-else-if="getFileType(nowView)=='audio'"></audio>
       </div>
     </div>
   </div>
