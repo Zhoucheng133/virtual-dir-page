@@ -137,7 +137,7 @@ export default {
         // 注意! 根据情况展示
         this.showView=true;
         this.nowView=item;
-        if(this.getFileType(this.selectFile)=='video' || this.getFileType(this.selectFile)=='audio'){
+        if(this.getFileType(this.nowView)=='video' || this.getFileType(this.nowView)=='audio'){
           var that=this;
           this.$nextTick(() => {
             that.player = new Plyr('#player');
