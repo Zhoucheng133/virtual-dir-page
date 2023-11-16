@@ -347,8 +347,10 @@ export default {
 .image_viewer{
   max-width: 60vw;
   max-height: 60vh;
+} 
+.plyr video{
+  width: 60vw !important;
 }
-
 .video_player{
   width: 60vw;
 }
