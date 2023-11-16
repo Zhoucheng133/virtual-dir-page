@@ -89,8 +89,7 @@ export default {
   methods: {
     // 下载文件
     downloadHandler(){
-      // TODO 需要修改
-      document.location.href="/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
+      document.location.href="/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
     
     // 关闭预览
