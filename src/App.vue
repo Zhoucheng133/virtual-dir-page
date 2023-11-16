@@ -560,6 +560,7 @@ export default {
   transition: all linear .2s;
   border-radius: 5px;
   padding: 0px 7px 0px 7px;
+  white-space: nowrap;
 }
 .itemDir:hover{
   cursor: pointer;
