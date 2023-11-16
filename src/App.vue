@@ -332,19 +332,35 @@ export default {
       }).catch(()=>{
         this.$message.error("加载错误");
       })
+    },
+
+    // 自动滚动目录到最右边
+    autoScrollDir(){
+      console.log("autoScroll");
+      var that=this;
+      this.$nextTick(() => {
+        that.$refs.headRef.scrollTo({
+          left: that.$refs.headRef.scrollWidth,
+          behavior: 'smooth',
+        });
+      });
     }
   },
+
   created() {
     document.title="虚拟目录";
   },
+
   mounted() {
     this.getList();
-
     // 自动滚动到最右边
-    this.$refs.headRef.scrollTo({
-      left: this.$refs.headRef.scrollWidth,
-      behavior: 'smooth',
-    });
+    this.autoScrollDir();
+  },
+  
+  watch: {
+    nowDir: function(){
+      this.autoScrollDir();
+    }
   },
 }
 </script>
