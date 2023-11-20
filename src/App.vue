@@ -463,6 +463,8 @@ export default {
   border-radius: 10px;
 }
 .loginBg{
+  opacity: 0;
+  animation: opacityIn .2s forwards linear;
   user-select: none;
   display: flex;
   justify-content: center;
@@ -475,6 +477,9 @@ export default {
   width: 100vw;
 }
 .loadingView{
+  animation: opacityIn .2s forwards linear;
+  opacity: 0;
+  animation-delay: 200ms;
   background-color: rgb(255, 255, 255);
   height: 100vh;
   width: 100vw;
@@ -706,6 +711,9 @@ export default {
   /* background-color: lightblue; */
   padding-left: 10px;
   padding-right: 10px;
+  animation: opacityIn .2s forwards linear;
+  animation-delay: 200ms;
+  opacity: 0;
 }
 @media screen and (max-width: 800px) {
   .main{
