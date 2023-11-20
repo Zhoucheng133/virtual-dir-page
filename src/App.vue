@@ -363,12 +363,22 @@ export default {
       })
     },
 
+    // 自动登录
+    autoLogin(){
+      if(localStorage.getItem("username")==this.userInfo.username && localStorage.getItem("password")==this.userInfo.password){
+        return true;
+      }else{
+        return false;
+      }
+    },
+
+    // 登录
     loginHandler(){
       if(this.inputUserInfo.username==this.userInfo.username && this.inputUserInfo.password==this.userInfo.password){
         this.$message.success("登录成功");
         this.goCloseLogin=true;
-        // localStorage.setItem("username", this.userInfo.username);
-        // localStorage.setItem("password", this.userInfo.password);
+        localStorage.setItem("username", this.userInfo.username);
+        localStorage.setItem("password", this.userInfo.password);
         setTimeout(() => {
           this.needLogin=false;
           this.goCloseLogin=false;
@@ -385,6 +395,9 @@ export default {
         if(response.data.needLogin){
           this.userInfo.username=response.data.username;
           this.userInfo.password=response.data.password;
+          if(this.autoLogin()){
+            this.needLogin=false;
+          }
         }else{
           this.needLogin=false;
         }
