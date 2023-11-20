@@ -10,6 +10,7 @@
   "dependencies": {
     "ant-design-vue": "1.7.8",
     "axios": "^1.6.1",
+    "bootstrap-icons": "^1.11.1",
     "core-js": "^3.8.3",
     "plyr": "^3.7.8",
     "vue": "^2.6.14"
