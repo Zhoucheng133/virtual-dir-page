@@ -120,7 +120,8 @@ export default {
       userInfo: {
         username: '',
         password: ''
-      }
+      },
+      goCloseLogin: false,
     }
   },
   methods: {
