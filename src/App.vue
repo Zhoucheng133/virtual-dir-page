@@ -64,7 +64,7 @@
       Loading...
     </div>
     <!-- 登录界面 -->
-    <div class="loginBg" v-if="needLogin">
+    <div :class="goCloseLogin ? 'loginBg_after' : 'loginBg'" v-if="needLogin" ref="loginRef">
       <div class="loginPanel">
         <div class="title">登录</div>
         <div class="inputArea">
@@ -73,7 +73,7 @@
           <div class="inputText" style="margin-top: 20px;">密码</div>
           <a-input-password v-model="inputUserInfo.password"></a-input-password>
         </div>
-        <div class="loginButton">
+        <div class="loginButton" @click="loginHandler">
           <i class="bi bi-arrow-right-short"></i>
         </div>
       </div>
@@ -363,7 +363,18 @@ export default {
     },
 
     loginHandler(){
-      // if()
+      if(this.inputUserInfo.username==this.userInfo.username && this.inputUserInfo.password==this.userInfo.password){
+        this.$message.success("登录成功");
+        this.goCloseLogin=true;
+        // localStorage.setItem("username", this.userInfo.username);
+        // localStorage.setItem("password", this.userInfo.password);
+        setTimeout(() => {
+          this.needLogin=false;
+          this.goCloseLogin=false;
+        }, 200);
+      }else{
+        this.$message.error("登录失败: 用户名或密码不正确");
+      }
     },
 
     // 请求用户信息
@@ -462,9 +473,15 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
+.loginBg_after{
+  opacity: 1;
+  animation: opacityOut .2s forwards linear;
+}
 .loginBg{
   opacity: 0;
   animation: opacityIn .2s forwards linear;
+}
+.loginBg, .loginBg_after{
   user-select: none;
   display: flex;
   justify-content: center;
