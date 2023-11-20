@@ -24,3 +24,4 @@ pnpm-debug.log*
 
 src/_tmp.js
 test.js
+src/App_tmp.vue
