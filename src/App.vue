@@ -60,6 +60,7 @@
     </div>
     <!-- 加载界面 -->
     <div class="loadingView" v-if="isLoading">
+      <a-icon type="loading" style="margin-right: 5px;"/>
       Loading...
     </div>
   </div>
@@ -367,7 +368,7 @@ export default {
 
 <style>
 .loadingView{
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgb(255, 255, 255);
   height: 100vh;
   width: 100vw;
   z-index: 100;
