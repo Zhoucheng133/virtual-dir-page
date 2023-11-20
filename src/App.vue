@@ -10,7 +10,7 @@
       </div>
       <div class="tools">
         <div class="upload_button">上传</div>
-        <div class="newFolder_button">新建文件夹</div>
+        <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
@@ -78,12 +78,23 @@
         </div>
       </div>
     </div>
+    <!-- 新建文件夹窗口 -->
+    <a-modal
+      v-model="showNewFolder"
+      title="新建文件夹"
+      centered
+      cancelText="取消" 
+      okText="确定"
+      style="user-select: none;"
+      @ok="newFolderOK">
+      <a-input v-model="newFolderName" placeholder="新建文件夹名称"></a-input>
+    </a-modal>
   </div>
 </template>
 
 <script>
 const axios=require("axios");
-import data from "./_tmp";
+import url from "./_tmp";
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 export default {
@@ -105,7 +116,7 @@ export default {
       nowView: {},
       // 展示预览界面
       showView: false,
-      // 动画中转变量
+      // 动画中转变量(预览)
       goCloseView: false,
       // 显示加载中的界面
       isLoading: true,
@@ -121,13 +132,45 @@ export default {
         username: '',
         password: ''
       },
+      // 动画中转变量(登录)
       goCloseLogin: false,
+      // 新建文件夹Modal
+      showNewFolder: false,
+      // 新建文件夹名称
+      newFolderName: "",
     }
   },
   methods: {
+    // 确定新建文件夹
+    newFolderOK(){
+      axios.get(url.url+"/api/newFolder", {
+        params: {
+          dir: this.nowDir,
+          name: this.newFolderName
+        },
+      }).then((response)=>{
+        if(response.data.status==true){
+          this.$message.success("创建文件夹成功!");
+          this.showNewFolder=false;
+          this.getList();
+        }else{
+          this.$message.error("创建文件夹失败!");
+          this.showNewFolder=false;
+        }
+      }).catch(()=>{
+        this.$message.error("创建请求错误!");
+        this.showNewFolder=false;
+      })
+    },
+
+    // 新建文件夹
+    newFolderHandler() {
+			this.showNewFolder=true;
+    },
+
     // 下载文件
     downloadHandler(){
-      document.location.href="/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
+      document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
     
     // 关闭预览
@@ -143,7 +186,7 @@ export default {
 
     // 获取到文件地址
     fileLinkGet(){
-      return "/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
+      return url.url+"/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
 
     // 跳转到某个目录
@@ -350,7 +393,7 @@ export default {
     // 获取目录
     getList(){
       this.isLoading=true;
-      axios.get('/api/getlist', {
+      axios.get(url.url+'/api/getlist', {
         params: {
           dir: this.nowDir
         },
@@ -390,7 +433,7 @@ export default {
 
     // 请求用户信息
     getUserInfo(){
-      axios.get("/api/authRequest")
+      axios.get(url.url+"/api/authRequest")
       .then((response)=>{
         if(response.data.needLogin){
           this.userInfo.username=response.data.username;
