@@ -45,7 +45,7 @@
           <div class="viewer_downloadBt" @click="downloadHandler">下载</div>
         </div>
         <div class="viewer_close" @click="closeView">
-          x
+          <i class="bi bi-x"></i>
         </div>
       </div>
       <div class="viewer_main">
