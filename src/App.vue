@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="main">
+    <div class="main" v-if="!needLogin">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
@@ -63,6 +63,21 @@
       <a-icon type="loading" style="margin-right: 5px;"/>
       Loading...
     </div>
+    <!-- 登录界面 -->
+    <div class="loginBg" v-if="needLogin">
+      <div class="loginPanel">
+        <div class="title">登录</div>
+        <div class="inputArea">
+          <div class="inputText">用户</div>
+          <a-input v-model="inputUserInfo.username"></a-input>
+          <div class="inputText" style="margin-top: 20px;">密码</div>
+          <a-input-password v-model="inputUserInfo.password"></a-input-password>
+        </div>
+        <div class="loginButton">
+          <i class="bi bi-arrow-right-short"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -93,7 +108,19 @@ export default {
       // 动画中转变量
       goCloseView: false,
       // 显示加载中的界面
-      isLoading: false,
+      isLoading: true,
+      // 需要登录
+      needLogin: true,
+      // 输入的登录信息
+      inputUserInfo: {
+        username: '',
+        password: ''
+      },
+      // 用户信息
+      userInfo: {
+        username: '',
+        password: ''
+      }
     }
   },
   methods: {
@@ -335,6 +362,24 @@ export default {
       })
     },
 
+    loginHandler(){
+      // if()
+    },
+
+    // 请求用户信息
+    getUserInfo(){
+      axios.get("/api/authRequest")
+      .then((response)=>{
+        if(response.data.needLogin){
+          this.userInfo.username=response.data.username;
+          this.userInfo.password=response.data.password;
+        }else{
+          this.needLogin=false;
+        }
+        this.isLoading=false;
+      })
+    },
+
     // 自动滚动目录到最右边
     autoScrollDir(){
       console.log("autoScroll");
@@ -350,16 +395,20 @@ export default {
 
   created() {
     document.title="虚拟目录";
+    this.getUserInfo();
   },
 
   mounted() {
     this.getList();
     // 自动滚动到最右边
-    this.autoScrollDir();
+    // this.autoScrollDir();
   },
   
   watch: {
     nowDir: function(){
+      this.autoScrollDir();
+    },
+    needLogin: function(){
       this.autoScrollDir();
     }
   },
@@ -367,6 +416,64 @@ export default {
 </script>
 
 <style>
+.loginButton:hover{
+  background-color: rgb(0, 108, 210);
+  cursor: pointer;
+}
+.loginButton{
+  height: 50px;
+  width: 50px;
+  border-top-left-radius: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(24, 144, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all linear .2s;
+  color: white;
+  font-size: 30px;
+}
+.inputText{
+  text-align: left;
+  width: 100%;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.inputArea{
+  height: 270px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.title{
+  font-size: 25px;
+  font-weight: bold;
+}
+.loginPanel{
+  position: relative;
+  padding: 20px;
+  height: 400px;
+  width: 300px;
+  background-color: white;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.loginBg{
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+  height: 100vh;
+  width: 100vw;
+}
 .loadingView{
   background-color: rgb(255, 255, 255);
   height: 100vh;
