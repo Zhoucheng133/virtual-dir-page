@@ -22,6 +22,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-src/_tmp.js
+# src/_tmp.js
 test.js
 src/App_tmp.vue
