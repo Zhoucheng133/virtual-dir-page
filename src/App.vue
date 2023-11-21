@@ -368,8 +368,6 @@ export default {
         case 'jpeg':
         case 'gif':
         case 'svg':
-        case 'psd':
-        case 'dng':
           return 'image';
         case 'xls':
         case 'xlsx':
