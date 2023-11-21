@@ -15,7 +15,7 @@
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
       <div class="tools" style="margin-top: 15px;margin-left: 10px;">
-        <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目)</a-checkbox>
+        <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
       </div>
       <div class="body">
         <div class="listTitle">
@@ -507,7 +507,16 @@ export default {
           behavior: 'smooth',
         });
       });
-    }
+    },
+
+    // 显示已选中的文件/文件夹
+    selectedItems(){
+      if(this.selectedList.length==0){
+        return "";
+      }else{
+        return ", 选中"+this.selectedList.length+"个";
+      }
+    },
   },
 
   created() {
