@@ -159,9 +159,11 @@ export default {
           this.$message.error("创建文件夹失败!");
           this.showNewFolder=false;
         }
+        this.newFolderName="";
       }).catch(()=>{
         this.$message.error("创建请求错误!");
         this.showNewFolder=false;
+        this.newFolderName="";
       })
     },
 
