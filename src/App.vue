@@ -447,7 +447,28 @@ export default {
           dir: this.nowDir
         },
       }).then((response)=>{
-        this.list=response.data.list;
+        this.list=response.data.list.sort((a, b)=>{
+          // 按照type排序，type为dir的排在前面
+          if (a.type === "dir" && b.type !== "dir") {
+            return -1;
+          } else if (a.type !== "dir" && b.type === "dir") {
+            return 1;
+          }
+
+          // 如果type相同，按照name的字符串排序，考虑数字
+          const nameA = a.name.toLowerCase();
+          const nameB = b.name.toLowerCase();
+
+          const numA = parseInt(nameA.match(/\d+/), 10) || 0;
+          const numB = parseInt(nameB.match(/\d+/), 10) || 0;
+
+          if (numA !== numB) {
+            return numA - numB;
+          }
+
+          // 如果数字相同，按照字符串排序
+          return nameA.localeCompare(nameB);
+        });
         this.isLoading=false;
         // console.log(this.list);
       }).catch(()=>{
