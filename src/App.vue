@@ -11,7 +11,7 @@
       <div class="tools">
         <div class="upload_button">上传</div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
-        <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'">重命名</div>
+        <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
       </div>
       <div class="tools" style="margin-top: 15px;margin-left: 10px;">
@@ -89,6 +89,17 @@
       @ok="newFolderOK">
       <a-input v-model="newFolderName" placeholder="新建文件夹名称"></a-input>
     </a-modal>
+    <!-- 重命名文件/文件夹 -->
+    <a-modal
+      v-model="showReName"
+      title="重命名"
+      centered
+      cancelText="取消" 
+      okText="确定"
+      style="user-select: none;"
+      @ok="reNameOK">
+      <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
+    </a-modal>
   </div>
 </template>
 
@@ -140,9 +151,44 @@ export default {
       newFolderName: "",
       // 锁定滚动
       lockScroll: false,
+      // 重命名文件/文件夹Modal
+      showReName: false,
+      // 重命名文件/文件夹名称
+      reName: "",
     }
   },
   methods: {
+    // 重命名
+    reNameHandler(){
+      this.showReName=true;
+      this.reName=this.selectedList[0].name;
+    },
+
+    // 确定重命名
+    reNameOK(){
+      axios.get(url.url+"/api/rename", {
+        params: {
+          dir: this.nowDir,
+          oldName: this.selectedList[0].name,
+          newName: this.reName,
+        },
+      }).then((response)=>{
+        if(response.data.status==true){
+          this.$message.success("重命名成功!");
+          this.showReName=false;
+          this.getList();
+        }else{
+          this.$message.error("重命名失败!");
+          this.showReName=false;
+        }
+        this.reName="";
+      }).catch(()=>{
+        this.$message.error("创建请求错误!");
+        this.showReName=false;
+        this.reName="";
+      })
+    },
+
     // 确定新建文件夹
     newFolderOK(){
       axios.get(url.url+"/api/newFolder", {
