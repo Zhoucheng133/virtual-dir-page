@@ -266,7 +266,6 @@ export default {
         this.nowDir+=item.name;
         this.dir=this.nowDir.split('/').filter(Boolean);
         this.getList();
-        this.selectedList=[];
         this.selectAll_prop=false;
       }else{
         // 注意! 根据情况展示
@@ -523,6 +522,7 @@ export default {
   watch: {
     nowDir: function(){
       this.autoScrollDir();
+      this.selectedList=[];
     },
     needLogin: function(){
       this.autoScrollDir();
