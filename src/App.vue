@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="main" v-if="!needLogin">
+    <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
@@ -138,6 +138,8 @@ export default {
       showNewFolder: false,
       // 新建文件夹名称
       newFolderName: "",
+      // 锁定滚动
+      lockScroll: false,
     }
   },
   methods: {
@@ -468,8 +470,6 @@ export default {
 
   mounted() {
     this.getList();
-    // 自动滚动到最右边
-    // this.autoScrollDir();
   },
   
   watch: {
@@ -478,6 +478,12 @@ export default {
     },
     needLogin: function(){
       this.autoScrollDir();
+    },
+    showView: function(newVal){
+      this.lockScroll=newVal
+    },
+    isLoading: function(newVal){
+      this.lockScroll=newVal
     }
   },
 }
