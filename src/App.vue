@@ -591,6 +591,14 @@ export default {
     document.title="虚拟目录";
     this.getUserInfo();
   },
+
+  mounted() {
+    window.addEventListener("keydown", (event)=>{
+      if (event.key == "Escape" && this.showView==true){
+        this.closeView();
+      }
+    });
+  },
   
   watch: {
     nowDir: function(){
