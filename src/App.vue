@@ -231,7 +231,28 @@ export default {
 
     // 下载文件
     downloadHandler(){
-      document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
+      // document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
+      axios.get(url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name, {
+        responseType: 'arraybuffer', 
+        headers: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password")
+        },
+      }).then((response)=>{
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+
+        link.download = this.nowView.name;
+
+        link.click();
+
+        // 释放URL对象
+        window.URL.revokeObjectURL(link.href);
+      }).catch((error)=>{
+        console.error('用户验证失败', error);
+      })
     },
     
     // 关闭预览
