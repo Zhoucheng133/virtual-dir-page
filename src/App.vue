@@ -108,6 +108,7 @@ const axios=require("axios");
 import url from "./_tmp";
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
+const CryptoJS = require("crypto-js");
 export default {
   data() {
     return {
@@ -477,19 +478,22 @@ export default {
     // 自动登录
     autoLogin(){
       if(localStorage.getItem("username")==this.userInfo.username && localStorage.getItem("password")==this.userInfo.password){
+        this.getList();
         return true;
       }else{
+        localStorage.clear();
         return false;
       }
     },
 
     // 登录
     loginHandler(){
-      if(this.inputUserInfo.username==this.userInfo.username && this.inputUserInfo.password==this.userInfo.password){
+      if(CryptoJS.SHA256(this.inputUserInfo.username).toString()==this.userInfo.username && CryptoJS.SHA256(this.inputUserInfo.password).toString()==this.userInfo.password){
         this.$message.success("登录成功");
         this.goCloseLogin=true;
         localStorage.setItem("username", this.userInfo.username);
         localStorage.setItem("password", this.userInfo.password);
+        this.getList();
         setTimeout(() => {
           this.needLogin=false;
           this.goCloseLogin=false;
@@ -541,10 +545,6 @@ export default {
   created() {
     document.title="虚拟目录";
     this.getUserInfo();
-  },
-
-  mounted() {
-    this.getList();
   },
   
   watch: {
