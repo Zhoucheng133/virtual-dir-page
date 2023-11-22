@@ -173,6 +173,10 @@ export default {
           oldName: this.selectedList[0].name,
           newName: this.reName,
         },
+        headers: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password")
+        }
       }).then((response)=>{
         if(response.data.status==true){
           this.$message.success("重命名成功!");
@@ -197,6 +201,10 @@ export default {
           dir: this.nowDir,
           name: this.newFolderName
         },
+        headers: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password")
+        }
       }).then((response)=>{
         if(response.data.status==true){
           this.$message.success("创建文件夹成功!");
@@ -445,6 +453,10 @@ export default {
         params: {
           dir: this.nowDir
         },
+        headers: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password")
+        }
       }).then((response)=>{
         this.list=response.data.list.sort((a, b)=>{
           // 按照type排序，type为dir的排在前面
