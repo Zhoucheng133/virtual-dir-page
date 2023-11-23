@@ -12,7 +12,7 @@
         <div class="upload_button">上传</div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
-        <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'">删除</div>
+        <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
       </div>
       <div class="tools" style="margin-top: 15px;margin-left: 10px;">
         <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
@@ -161,6 +161,48 @@ export default {
     }
   },
   methods: {
+    // 确定删除
+    delOK(){
+      axios.get(url.url+"/api/del", {
+        params: {
+          dir: this.nowDir,
+          files: this.selectedList,
+        },
+        headers: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password")
+        }
+      }).then((response)=>{
+        if(response.data.status==true){
+          this.$message.success("删除成功!");
+          this.selectedList=[];
+        }else{
+          this.$message.error("删除失败!");
+        }
+      }).catch(()=>{
+        this.$message.error("创建请求错误!");
+      }).finally(()=>{
+        this.getList();
+      })
+    },
+
+    // 删除
+    delHandler(){
+      var that=this;
+      this.$confirm({
+        title: '你确定要删除选中的文件/文件夹吗?',
+        content: h => <div style="color:red;">这是不可逆的操作</div>,
+        centered: true,
+        okText: "确定",
+        cancelText: "取消",
+        onOk() {
+          that.delOK();
+        },
+        onCancel() {
+        },
+      });
+    },
+
     // 重命名
     reNameHandler(){
       this.showReName=true;
