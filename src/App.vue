@@ -329,7 +329,6 @@ export default {
         // 跳转到根目录
         this.nowDir="";
         this.dir=[];
-        this.getList();
       }else{
         // 跳转到某个目录
         this.dir=this.dir.slice(0, dist+1);
@@ -338,8 +337,8 @@ export default {
           this.nowDir+="/";
           this.nowDir+=item;
         }
-        this.getList();
       }
+      this.getList();
     },
 
     // 打开某个文件/目录
@@ -601,6 +600,7 @@ export default {
             this.needLogin=false;
           }
         }else{
+          this.getList();
           this.needLogin=false;
         }
         this.isLoading=false;
