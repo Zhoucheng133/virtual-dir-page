@@ -539,25 +539,29 @@ export default {
           } else if (a.type !== "dir" && b.type === "dir") {
             return 1;
           }
-
           // 如果type相同，按照name的字符串排序，考虑数字
-          const nameA = a.name.toLowerCase();
-          const nameB = b.name.toLowerCase();
-
-          const numA = parseInt(nameA.match(/\d+/), 10) || 0;
-          const numB = parseInt(nameB.match(/\d+/), 10) || 0;
-
-          if (numA !== numB) {
-            return numA - numB;
+          // 提取字符串和数字部分
+          const regex = /([a-zA-Z\u4e00-\u9fa5]+)(\d+)/;
+          const matchA = a.name.match(regex);
+          const matchB = b.name.match(regex);
+          if (!matchA || !matchB) {
+            // 如果没有找到匹配项，返回0以避免排序
+            return 0;
           }
-
-          // 如果数字相同，按照字符串排序
-          return nameA.localeCompare(nameB);
+          // 比较字符串部分
+          if (matchA[1] < matchB[1]) {
+            return -1;
+          } else if (matchA[1] > matchB[1]) {
+            return 1;
+          } else {
+            // 如果字符串部分相同，比较数字部分
+            return parseInt(matchA[2]) - parseInt(matchB[2]);
+          }
         });
         this.isLoading=false;
         // console.log(this.list);
-      }).catch(()=>{
-        this.$message.error("加载错误");
+      }).catch((error)=>{
+        this.$message.error("加载错误: "+error);
       })
     },
 
