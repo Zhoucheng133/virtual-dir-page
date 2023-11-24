@@ -193,7 +193,7 @@ export default {
       if(this.showUpload){
         this.uploadOffset=0;
       }else{
-        this.uploadOffset=430;
+        this.uploadOffset=445;
       }
       this.showUpload=!this.showUpload
     },
@@ -749,11 +749,11 @@ export default {
 <style>
 .uploadArrow{
   margin-left: auto;
-  font-size: 18px;
+  font-size: 16px;
   margin-right: 10px;
 }
 .uploadTitle{
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   margin-left: 10px;
 }
@@ -764,7 +764,7 @@ export default {
 .uploadBar{
   padding-left: 20px;
   padding-right: 20px;
-  height: 70px;
+  height: 55px;
   width: 100%;
   display: flex;
   align-items: center;
