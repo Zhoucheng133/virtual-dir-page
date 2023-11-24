@@ -10,9 +10,10 @@
       </div>
       <div class="tools">
         <el-upload
-          action="/your-upload-api"
+          :action="getUploadUrl()"
           :show-file-list="false"
           :on-progress="handleProgress"
+          :headers="{ username: userInfo.username, password: userInfo.password }"
           multiple
         >
           <div class="upload_button">上传</div>
@@ -32,7 +33,7 @@
           <div>大小</div>
         </div>
         <div v-for="(item, index) in list" :key="index">
-          <div class="fileItem" v-if="!item.name.startsWith('.')">
+          <div class="fileItem">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
             <div class="icon" @click="openItem(item)">
               <img :src="getIconSrc(item)" width="30px">
@@ -168,6 +169,11 @@ export default {
     }
   },
   methods: {
+    // 获取上传url
+    getUploadUrl(){
+      return url.url+"/api/upload?dir="+this.nowDir;
+    },
+
     // 上传进度
     handleProgress(event, file, fileList){
       fileList.forEach((file) => {
