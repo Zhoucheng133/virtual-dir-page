@@ -112,8 +112,8 @@
       <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
     </a-modal>
     <!-- 上传进度 -->
-    <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}" v-if="!needLogin">
-      <div class="uploadBar" @click="uploadViewController">
+    <div class="uploadPanel" :style="{'height': uploadHeight+'px'}" v-if="!needLogin">
+      <div class="uploadBar" @click="uploadPanelController">
         <div class="uploadTitle">上传列表</div>
         <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
         <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
@@ -184,16 +184,16 @@ export default {
       // 展开上传页
       showUpload: false,
       // 上传页offset
-      uploadOffset: 445,
+      uploadHeight: 55,
     }
   },
   methods: {
     // 收起&展开上传列表
-    uploadViewController(){
-      if(!this.showUpload){
-        this.uploadOffset=0;
+    uploadPanelController(){
+      if(this.showUpload){
+        this.uploadHeight=55;
       }else{
-        this.uploadOffset=445;
+        this.uploadHeight=500;
       }
       this.showUpload=!this.showUpload
     },
@@ -770,17 +770,15 @@ export default {
   align-items: center;
   transition: all linear .2s;
 }
-.uploadView{
-  height: 500px;
+.uploadPanel{
   width: 400px;
   backdrop-filter: blur(15px);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
   z-index: 100;
   position: fixed;
-  bottom: 0;
+  bottom: 100px;
   right: 100px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-radius: 20px;
   overflow: hidden;
   user-select: none;
   transition: all cubic-bezier(0.4, 0, 0.2, 1) .3s;
