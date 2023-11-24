@@ -115,7 +115,7 @@
     <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}">
       <div class="uploadBar" @click="uploadViewController">
         <div class="uploadTitle">上传列表</div>
-        <i v-if="!showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
+        <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
         <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
       </div>
     </div>
@@ -184,13 +184,13 @@ export default {
       // 展开上传页
       showUpload: false,
       // 上传页offset
-      uploadOffset: 0,
+      uploadOffset: 445,
     }
   },
   methods: {
     // 收起&展开上传列表
     uploadViewController(){
-      if(this.showUpload){
+      if(!this.showUpload){
         this.uploadOffset=0;
       }else{
         this.uploadOffset=445;
@@ -1090,6 +1090,7 @@ export default {
   animation-delay: 200ms;
   opacity: 0;
 }
+
 @media screen and (max-width: 800px) {
   .main{
     width: 100%;
@@ -1100,6 +1101,13 @@ export default {
     right: auto;
   }
 }
+
+@media screen and (max-width: 1860px) {
+  .body{
+    padding-bottom: 70px;
+  }
+}
+
 #app {
   display: flex;
   flex-direction: column;
