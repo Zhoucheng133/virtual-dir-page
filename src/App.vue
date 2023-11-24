@@ -9,7 +9,14 @@
         </div>
       </div>
       <div class="tools">
-        <div class="upload_button">上传</div>
+        <el-upload
+          action="/your-upload-api"
+          :show-file-list="false"
+          :on-progress="handleProgress"
+          multiple
+        >
+          <div class="upload_button">上传</div>
+        </el-upload>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
@@ -161,6 +168,18 @@ export default {
     }
   },
   methods: {
+    // 上传进度
+    handleProgress(event, file, fileList){
+      fileList.forEach((file) => {
+        console.log(file.name, file.percent);
+      });
+      this.progress = event.percent;
+    },
+
+    // 上传
+    uploadHandler(){
+    },
+
     // 确定删除
     delOK(){
       axios.get(url.url+"/api/del", {
