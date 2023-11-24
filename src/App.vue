@@ -14,6 +14,9 @@
           :show-file-list="false"
           :on-progress="handleProgress"
           :headers="{ username: userInfo.username, password: userInfo.password }"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :before-upload="beforeHandler"
           multiple
         >
           <div class="upload_button">上传</div>
@@ -165,10 +168,41 @@ export default {
       // 重命名文件/文件夹名称
       reName: "",
       // 预览链接
-      fileLink: ""
+      fileLink: "",
+      // 上传的文件信息
+      fileUpload: [],
+      // 上传成功的文件个数
+      uploadOk: 0,
     }
   },
   methods: {
+    // 上传文件出现变化
+    beforeHandler(file){
+      this.fileUpload.push(file);
+    },
+
+    // 上传失败
+    handleError(){
+      this.$message.error('上传失败');
+    },
+
+    // 上传成功
+    handleSuccess(response){
+      if (response.status) {
+        this.uploadOk+=1
+        console.log("完成数量: "+this.uploadOk);
+      } else {
+        this.$message.error('上传失败');
+      }
+      if(this.uploadOk==this.fileUpload.length){
+        this.$message.success('全部上传成功');
+        this.fileUpload=[];
+        this.uploadOk=0;
+        this.getList();
+        // console.log(this.fileUpload);
+      }
+    },
+
     // 获取上传url
     getUploadUrl(){
       return url.url+"/api/upload?dir="+this.nowDir;
@@ -176,14 +210,9 @@ export default {
 
     // 上传进度
     handleProgress(event, file, fileList){
-      fileList.forEach((file) => {
-        console.log(file.name, file.percent);
-      });
-      this.progress = event.percent;
-    },
-
-    // 上传
-    uploadHandler(){
+      // fileList.forEach((file) => {
+      //   console.log(file.name, file.percentage);
+      // });
     },
 
     // 确定删除
