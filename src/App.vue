@@ -112,13 +112,11 @@
       <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
     </a-modal>
     <!-- 上传进度 -->
-    <div class="uploadPanel">
-      <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}" v-if="!needLogin">
-        <div class="uploadBar" @click="uploadViewController">
-          <div class="uploadTitle">上传列表</div>
-          <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
-          <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
-        </div>
+    <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}" v-if="!needLogin">
+      <div class="uploadBar" @click="uploadViewController">
+        <div class="uploadTitle">上传列表</div>
+        <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
+        <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
       </div>
     </div>
   </div>
