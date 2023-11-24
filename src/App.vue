@@ -112,11 +112,13 @@
       <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
     </a-modal>
     <!-- 上传进度 -->
-    <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}">
-      <div class="uploadBar" @click="uploadViewController">
-        <div class="uploadTitle">上传列表</div>
-        <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
-        <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
+    <div class="uploadPanel">
+      <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}" v-if="!needLogin">
+        <div class="uploadBar" @click="uploadViewController">
+          <div class="uploadTitle">上传列表</div>
+          <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
+          <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -749,7 +751,7 @@ export default {
 <style>
 .uploadArrow{
   margin-left: auto;
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 10px;
 }
 .uploadTitle{
@@ -783,7 +785,9 @@ export default {
   border-top-right-radius: 20px;
   overflow: hidden;
   user-select: none;
-  transition: all ease-in-out .3s;
+  transition: all cubic-bezier(0.4, 0, 0.2, 1) .3s;
+  opacity: 0;
+  animation: opacityIn .2s linear forwards;
 }
 .loginButton:hover{
   background-color: rgb(0, 108, 210);
