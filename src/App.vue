@@ -203,9 +203,11 @@ export default {
           this.selectedList=[];
         }else{
           this.$message.error("删除失败!");
+          this.selectedList=[];
         }
       }).catch(()=>{
         this.$message.error("创建请求错误!");
+        this.selectedList=[];
       }).finally(()=>{
         this.getList();
       })
