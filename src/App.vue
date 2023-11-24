@@ -584,6 +584,8 @@ export default {
             // 如果字符串部分相同，比较数字部分
             return parseInt(matchA[2]) - parseInt(matchB[2]);
           }
+        }).filter((item)=>{
+          return !item.name.startsWith(".");
         });
         this.isLoading=false;
         // console.log(this.list);
