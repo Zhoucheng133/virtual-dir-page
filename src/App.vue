@@ -185,6 +185,8 @@ export default {
       showUpload: false,
       // 上传页offset
       uploadHeight: 55,
+      // 上传列表(用于查看百分比)
+      uploadList: [],
     }
   },
   methods: {
@@ -232,9 +234,9 @@ export default {
 
     // 上传进度
     handleProgress(event, file, fileList){
-      // fileList.forEach((file) => {
-      //   console.log(file.name, file.percentage);
-      // });
+      fileList.forEach((file) => {
+        console.log(file);
+      });
     },
 
     // 确定删除
@@ -774,10 +776,10 @@ export default {
   width: 400px;
   backdrop-filter: blur(15px);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
-  z-index: 100;
+  z-index: 10;
   position: fixed;
-  bottom: 100px;
-  right: 100px;
+  bottom: 50px;
+  right: 50px;
   border-radius: 20px;
   overflow: hidden;
   user-select: none;
@@ -907,12 +909,12 @@ export default {
 
 .fileViewer, .fileViewer_after{
   position: fixed;
+  z-index: 50;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(255, 255, 255, 0.9);
-  z-index: 10;
 }
 
 .viewer_main{
@@ -1096,15 +1098,10 @@ export default {
     width: 100%;
     /* background-color: blue; */
   }
-  .uploadView{
+  .uploadPanel{
     width: calc(100vw - 40px);
     right: auto;
-  }
-}
-
-@media screen and (max-width: 1860px) {
-  .body{
-    padding-bottom: 70px;
+    bottom: 10px;
   }
 }
 
