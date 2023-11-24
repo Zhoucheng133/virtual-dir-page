@@ -111,6 +111,14 @@
       @ok="reNameOK">
       <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
     </a-modal>
+    <!-- 上传进度 -->
+    <div class="uploadView" :style="{'transform': 'translateY('+uploadOffset+'px)'}">
+      <div class="uploadBar" @click="uploadViewController">
+        <div class="uploadTitle">上传列表</div>
+        <i v-if="!showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
+        <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -173,9 +181,23 @@ export default {
       fileUpload: [],
       // 上传成功的文件个数
       uploadOk: 0,
+      // 展开上传页
+      showUpload: false,
+      // 上传页offset
+      uploadOffset: 0,
     }
   },
   methods: {
+    // 收起&展开上传列表
+    uploadViewController(){
+      if(this.showUpload){
+        this.uploadOffset=0;
+      }else{
+        this.uploadOffset=430;
+      }
+      this.showUpload=!this.showUpload
+    },
+
     // 上传文件出现变化
     beforeHandler(file){
       this.fileUpload.push(file);
@@ -725,6 +747,44 @@ export default {
 </script>
 
 <style>
+.uploadArrow{
+  margin-left: auto;
+  font-size: 18px;
+  margin-right: 10px;
+}
+.uploadTitle{
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+.uploadBar:hover{
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+}
+.uploadBar{
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 70px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  transition: all linear .2s;
+}
+.uploadView{
+  height: 500px;
+  width: 400px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  right: 100px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  overflow: hidden;
+  user-select: none;
+  transition: all ease-in-out .3s;
+}
 .loginButton:hover{
   background-color: rgb(0, 108, 210);
   cursor: pointer;
@@ -1034,6 +1094,10 @@ export default {
   .main{
     width: 100%;
     /* background-color: blue; */
+  }
+  .uploadView{
+    width: calc(100vw - 40px);
+    right: auto;
   }
 }
 #app {
