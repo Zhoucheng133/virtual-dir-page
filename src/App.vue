@@ -597,22 +597,19 @@ export default {
           }
           // 如果type相同，按照name的字符串排序，考虑数字
           // 提取字符串和数字部分
-          const regex = /([a-zA-Z\u4e00-\u9fa5]+)(\d+)/;
-          const matchA = a.name.match(regex);
-          const matchB = b.name.match(regex);
-          if (!matchA || !matchB) {
-            // 如果没有找到匹配项，返回0以避免排序
-            return 0;
-          }
+          const strA = a.name.replace(/\d+/g, "");
+          const strB = b.name.replace(/\d+/g, "");
           // 比较字符串部分
-          if (matchA[1] < matchB[1]) {
+          if (strA < strB) {
             return -1;
-          } else if (matchA[1] > matchB[1]) {
+          } else if (strA > strB) {
             return 1;
-          } else {
-            // 如果字符串部分相同，比较数字部分
-            return parseInt(matchA[2]) - parseInt(matchB[2]);
           }
+          const numA = parseInt(a.name.match(/\d+/), 10) || 0;
+          const numB = parseInt(b.name.match(/\d+/), 10) || 0;
+
+          return numA - numB;
+
         }).filter((item)=>{
           return !item.name.startsWith(".");
         });
