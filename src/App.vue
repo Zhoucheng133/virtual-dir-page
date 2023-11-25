@@ -233,8 +233,10 @@ export default {
     canDownload(){
       if(this.selectedList.length==0){
         return false;
+      }else if(this.selectedList.some(obj => obj.type === 'dir')){
+        return false;
       }
-
+      return true;
     },
 
     // 拖拽
