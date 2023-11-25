@@ -182,9 +182,11 @@ export default {
       // 上传成功的文件个数
       uploadOk: 0,
       // 展开上传页
-      showUpload: false,
+      // showUpload: false,
+      showUpload: true,
       // 上传页offset
-      uploadHeight: 55,
+      // uploadHeight: 50,
+      uploadHeight: 500,
       // 上传列表(用于查看百分比)
       uploadList: [],
     }
@@ -193,7 +195,7 @@ export default {
     // 收起&展开上传列表
     uploadPanelController(){
       if(this.showUpload){
-        this.uploadHeight=55;
+        this.uploadHeight=50;
       }else{
         this.uploadHeight=500;
       }
@@ -751,11 +753,11 @@ export default {
 <style>
 .uploadArrow{
   margin-left: auto;
-  font-size: 14px;
+  font-size: 13px;
   margin-right: 10px;
 }
 .uploadTitle{
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   margin-left: 10px;
 }
@@ -766,14 +768,14 @@ export default {
 .uploadBar{
   padding-left: 20px;
   padding-right: 20px;
-  height: 55px;
+  height: 50px;
   width: 100%;
   display: flex;
   align-items: center;
   transition: all linear .2s;
 }
 .uploadPanel{
-  width: 400px;
+  width: 380px;
   backdrop-filter: blur(15px);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   z-index: 10;
