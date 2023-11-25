@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @dragenter.prevent="handleDragEnter" @contextmenu.prevent.stop="onContextmenu()">
+  <div id="app" @dragenter.prevent="handleDragEnter" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu">
     <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
@@ -37,7 +37,7 @@
           <div>大小</div>
         </div>
         <div v-for="(item, index) in list" :key="index">
-          <div class="fileItem" @contextmenu.prevent.stop="onContextmenu(index, item)">
+          <div :class="rightClickIndex==index ? 'menuItem' : 'fileItem'" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
             <div class="icon" @click="openItem(item)">
               <img :src="getIconSrc(item)" width="30px" draggable="false">
@@ -227,9 +227,16 @@ export default {
       uploadList: [],
       // 显示drag提示
       isDragging: false,
+      // 右键菜单选中的item
+      rightClickIndex: null,
     }
   },
   methods: {
+    // 取消鼠标点击
+    hideMenu(){
+      this.rightClickIndex=null;
+    },
+
     // 是否启用下载
     disableDownload(item){
       if(item==undefined){
@@ -242,6 +249,8 @@ export default {
 
     // 右键菜单
     onContextmenu(index, item){
+      this.rightClickIndex=index;
+      console.log("showMenu");
       this.$contextmenu({
         items: [
           {
@@ -249,6 +258,7 @@ export default {
             disabled: item == undefined ? true : false,
             onClick: () => {
               this.openItem(item);
+              this.rightClickIndex=null;
             }
           },
           {
@@ -257,6 +267,7 @@ export default {
             disabled: this.disableDownload(item),
             onClick: () => {
               this.downloadHandler(item);
+              this.rightClickIndex=null;
             }
           },
           {
@@ -264,6 +275,7 @@ export default {
             icon: "bi-arrow-clockwise",
             onClick: () => {
               this.reload();
+              this.rightClickIndex=null;
             },
             divided: true
           },
@@ -272,6 +284,7 @@ export default {
             icon: "bi-folder-plus",
             onClick: () => {
               this.newFolderHandler();
+              this.rightClickIndex=null;
             }
           },
           {
@@ -282,6 +295,7 @@ export default {
               this.list[index].selected=true;
               this.selectedList.push(item);
               this.reNameHandler();
+              this.rightClickIndex=null;
             }
           },
           {
@@ -292,6 +306,7 @@ export default {
               this.list[index].selected=true;
               this.selectedList.push(item);
               this.delHandler();
+              this.rightClickIndex=null;
             }
           }
         ],
@@ -1253,7 +1268,7 @@ export default {
   cursor: pointer;
   background-color: rgb(245, 245, 245);
 }
-.fileItem{
+.fileItem, .menuItem{
   width: 100%;
   display: grid;
   grid-template-columns: 30px 40px auto 100px;
@@ -1266,6 +1281,9 @@ export default {
   font-weight: 400;
   padding-right: 10px;
   padding-left: 10px;
+}
+.menuItem{
+  background-color: rgb(245, 245, 245);
 }
 .download_button_disabled{
   background-color: grey;
