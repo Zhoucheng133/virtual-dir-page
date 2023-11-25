@@ -114,13 +114,15 @@
     <!-- 上传进度 -->
     <div class="uploadPanel" :style="{'height': uploadHeight+'px'}" v-if="!needLogin">
       <div class="uploadBar" @click="uploadPanelController">
+        <i v-if="uploadOk!=fileUpload.length" class="bi bi-file-earmark-arrow-up statusIcon"></i>
+        <i v-else class="bi bi-check-circle statusIcon"></i>
         <div class="uploadTitle">上传列表</div>
         <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
         <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
       </div>
       <div class="uploadList">
         <div class="listContent" v-for="(item, index) in uploadList" :key="index">
-          <div class="progressBg" :style="{'width': item.percentage+'%'}"></div>
+          <div class="progressBg" :style="{'width': item.percentage+'%'}" v-if="item.status!='success'"></div>
           <div class="listImg"><img :src="getIconSrc(item)" width="30px" draggable="false"></div>
           <div class="listInfo">
             <div class="listFileName">{{ item.name }}</div>
@@ -196,40 +198,13 @@ export default {
       // 上传成功的文件个数
       uploadOk: 0,
       // 展开上传页
-      // showUpload: false,
-      showUpload: true,
+      showUpload: false,
+      // showUpload: true,
       // 上传页offset
-      // uploadHeight: 50,
-      uploadHeight: 500,
+      uploadHeight: 50,
+      // uploadHeight: 500,
       // 上传列表(用于查看百分比)
-      uploadList: [
-        {
-          "status": "uploading",
-          "name": "一张平平无奇的图片图片图片图片图片图片图片图片.png",
-          "size": 1307937,
-          "percentage": 70,
-          "uid": 1700874637068,
-          "raw": {
-            "uid": 1700874637068
-          },
-          "response": {
-            "status": true
-          }
-        },
-        {
-          "status": "success",
-          "name": "测试文件.zip",
-          "size": 656178212,
-          "percentage": 100,
-          "uid": 1700874637068,
-          "raw": {
-            "uid": 1700874637068
-          },
-          "response": {
-            "status": true
-          }
-        }
-      ],
+      uploadList: [],
     }
   },
   methods: {
@@ -246,6 +221,8 @@ export default {
     // 上传文件出现变化
     beforeHandler(file){
       this.fileUpload.push(file);
+      this.uploadHeight=500;
+      this.showUpload=!this.showUpload
     },
 
     // 上传失败
@@ -275,10 +252,23 @@ export default {
       return url.url+"/api/upload?dir="+this.nowDir;
     },
 
+    // 判断是否需要添加到上传列表
+    addToUploadList(newObj){
+      const index = this.uploadList.findIndex(obj => obj.name === newObj.name && obj.size === newObj.size);
+
+      if (index !== -1) {
+        // 如果存在，替换数组中的对象
+        this.uploadList[index] = newObj;
+      } else {
+        // 如果不存在，将新对象添加到数组中
+        this.uploadList.push(newObj);
+      }
+    },
+
     // 上传进度
     handleProgress(event, file, fileList){
       fileList.forEach((file) => {
-        console.log(file);
+        this.addToUploadList(file);
       });
     },
 
@@ -792,6 +782,13 @@ export default {
 </script>
 
 <style>
+.statusIcon{
+  font-size: 17px;
+}
+.uploadList{
+  height: 450px;
+  overflow: auto;
+}
 .statusIcon{
   display: flex;
   justify-content: center;
