@@ -867,8 +867,8 @@ export default {
 }
 .uploadPanel{
   width: 380px;
-  backdrop-filter: blur(15px);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background-color: white;
   z-index: 10;
   position: fixed;
   bottom: 50px;
