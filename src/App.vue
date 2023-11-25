@@ -61,9 +61,16 @@
       </div>
       <div class="viewer_main">
         <div v-if="getFileType(nowView)=='video'" class="video_player">
-          <video id="player"  playsinline controls :src="fileLink"></video>
+          <!-- <video id="player"  playsinline controls :src="fileLink"></video> -->
+          <vue-plyr>
+            <video crossorigin playsinline controls :src="fileLink"></video>
+          </vue-plyr>
         </div>
-        <audio id="player" class="audio_player" controls :src="fileLink" v-else-if="getFileType(nowView)=='audio'"></audio>
+        <div v-else-if="getFileType(nowView)=='audio'">
+          <vue-plyr class="audio_player">
+            <audio crossorigin controls :src="fileLink"></audio>
+          </vue-plyr>
+        </div>
         <img class="image_viewer" :src="fileLink" v-else-if="getFileType(nowView)=='image'" draggable="false">
         <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLink" frameborder="0"></iframe>
         <img v-else :src="getIconSrc(nowView)" width="150px" draggable="false">
@@ -158,8 +165,6 @@
 <script>
 const axios=require("axios");
 import url from "./_tmp";
-import Plyr from 'plyr';
-import 'plyr/dist/plyr.css';
 const CryptoJS = require("crypto-js");
 export default {
   data() {
@@ -490,12 +495,12 @@ export default {
         // 注意! 根据情况展示
         this.showView=true;
         this.nowView=item;
-        if(this.getFileType(this.nowView)=='video' || this.getFileType(this.nowView)=='audio'){
-          var that=this;
-          this.$nextTick(() => {
-            that.player = new Plyr('#player');
-          });
-        }
+        // if(this.getFileType(this.nowView)=='video' || this.getFileType(this.nowView)=='audio'){
+        //   var that=this;
+        //   this.$nextTick(() => {
+        //     that.player = new Plyr('#player');
+        //   });
+        // }
       }
     },
 
