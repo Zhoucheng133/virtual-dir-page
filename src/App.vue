@@ -437,11 +437,11 @@ export default {
     // 下载文件
     downloadHandler(){
       // document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
-      var downloadLink=url.url+"/api/downloadFile?dir="+this.nowDir+"/";
+      var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
       if(this.showView){
-        downloadLink+=this.nowView.name
+        downloadLink+=encodeURIComponent(this.nowView.name)
       }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
-        downloadLink+=this.selectedList[0].name;
+        downloadLink+=encodeURIComponent(this.selectedList[0].name);
       }else{
         return;
       }
