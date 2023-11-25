@@ -1139,7 +1139,8 @@ export default {
   max-height: 60vh;
 } 
 .video_player{
-  max-width: 60vw;
+  width: 60vw;
+  height: 33.75vw;
 }
 @keyframes opacityOut {
   0%{
@@ -1383,7 +1384,8 @@ export default {
     padding-bottom: 70px;
   }
   .video_player{
-    max-width: 95vw;
+    width: 95vw;
+    height: 53.4375vw;
   }
   .uploadPanel{
     width: calc(100vw - 40px);
