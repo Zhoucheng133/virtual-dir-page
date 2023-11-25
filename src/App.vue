@@ -214,7 +214,7 @@ export default {
     handleSuccess(response){
       if (response.status) {
         this.uploadOk+=1
-        console.log("完成数量: "+this.uploadOk);
+        // console.log("完成数量: "+this.uploadOk);
       } else {
         this.$message.error('上传失败');
       }
@@ -775,12 +775,12 @@ export default {
 .uploadPanel{
   width: 400px;
   backdrop-filter: blur(15px);
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   z-index: 10;
   position: fixed;
   bottom: 50px;
   right: 50px;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   user-select: none;
   transition: all cubic-bezier(0.4, 0, 0.2, 1) .3s;
