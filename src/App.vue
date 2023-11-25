@@ -62,16 +62,16 @@
       <div class="viewer_main">
         <div v-if="getFileType(nowView)=='video'" class="video_player">
           <vue-plyr>
-            <video crossorigin playsinline controls :src="fileLink"></video>
+            <video crossorigin playsinline controls :src="fileLinkGet()"></video>
           </vue-plyr>
         </div>
         <div v-else-if="getFileType(nowView)=='audio'">
           <vue-plyr class="audio_player">
-            <audio crossorigin controls :src="fileLink"></audio>
+            <audio crossorigin controls :src="fileLinkGet()"></audio>
           </vue-plyr>
         </div>
-        <img class="image_viewer" :src="fileLink" v-else-if="getFileType(nowView)=='image'" draggable="false">
-        <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLink" frameborder="0"></iframe>
+        <img class="image_viewer" :src="fileLinkGet()" v-else-if="getFileType(nowView)=='image'" draggable="false">
+        <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLinkGet()" frameborder="0"></iframe>
         <img v-else :src="getIconSrc(nowView)" width="150px" draggable="false">
       </div>
     </div>
@@ -452,17 +452,7 @@ export default {
 
     // 获取到文件地址
     fileLinkGet(){
-      axios.get(url.url+"/api/getFile?dir="+this.nowDir+"/"+this.nowView.name, {
-        responseType: 'blob', 
-        headers: {
-          username: localStorage.getItem("username"),
-          password: localStorage.getItem("password")
-        },
-      }).then((response)=>{
-        this.fileLink = URL.createObjectURL(response.data);
-      }).catch((error)=>{
-        console.error('用户验证失败', error);
-      })
+      return url.url+"/api/getFile?dir="+this.nowDir+"/"+this.nowView.name;
     },
 
     // 跳转到某个目录
