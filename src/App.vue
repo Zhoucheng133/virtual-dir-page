@@ -916,6 +916,7 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
+  user-select: none;
   background-color: rgba(255, 255, 255, 0.9);
 }
 
