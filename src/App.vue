@@ -376,6 +376,8 @@ export default {
         this.$message.error("创建请求错误!");
         this.showReName=false;
         this.reName="";
+      }).finally(()=>{
+        this.selectedList=[];
       })
     },
 
