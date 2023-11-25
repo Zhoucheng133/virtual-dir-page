@@ -1239,6 +1239,7 @@ export default {
   .main{
     width: 100%;
     /* background-color: blue; */
+    padding-bottom: 70px;
   }
   .uploadPanel{
     width: calc(100vw - 40px);
