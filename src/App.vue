@@ -21,7 +21,7 @@
         >
           <div class="upload_button">上传</div>
         </el-upload>
-        <div :class="selectedList.length==0 ? 'download_button_disabled' : 'download_button'"><i class="bi bi-download"></i></div>
+        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'"><i class="bi bi-download"></i></div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
@@ -229,6 +229,14 @@ export default {
     }
   },
   methods: {
+    // 是否可以下载
+    canDownload(){
+      if(this.selectedList.length==0){
+        return false;
+      }
+
+    },
+
     // 拖拽
     handleDragEnter(){
       this.isDragging = true;
@@ -328,6 +336,9 @@ export default {
 
     // 删除
     delHandler(){
+      if(this.selectedList.length==0){
+        return;
+      }
       var that=this;
       this.$confirm({
         title: '你确定要删除选中的文件/文件夹吗?',
@@ -345,6 +356,9 @@ export default {
 
     // 重命名
     reNameHandler(){
+      if(this.selectedList.length!=1){
+        return;
+      }
       this.showReName=true;
       this.reName=this.selectedList[0].name;
     },
