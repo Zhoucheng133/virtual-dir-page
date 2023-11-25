@@ -262,7 +262,7 @@ export default {
         this.$message.error('上传失败');
       }
       if(this.uploadOk==this.fileUpload.length){
-        this.$message.success('全部上传成功');
+        this.$message.success('上传成功');
         this.fileUpload=[];
         this.uploadOk=0;
         this.getList();
