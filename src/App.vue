@@ -21,7 +21,7 @@
         >
           <div class="upload_button">上传</div>
         </el-upload>
-        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'"><i class="bi bi-download"></i></div>
+        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'" @click="downloadHandler"><i class="bi bi-download"></i></div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
@@ -231,12 +231,17 @@ export default {
   methods: {
     // 是否可以下载
     canDownload(){
-      if(this.selectedList.length==0){
-        return false;
-      }else if(this.selectedList.some(obj => obj.type === 'dir')){
-        return false;
+      // if(this.selectedList.length==0){
+      //   return false;
+      // }else if(this.selectedList.some(obj => obj.type === 'dir')){
+      //   return false;
+      // }
+      // return true;
+      // (上)预留位
+      if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
+        return true;
       }
-      return true;
+      return false;
     },
 
     // 拖拽
@@ -432,7 +437,15 @@ export default {
     // 下载文件
     downloadHandler(){
       // document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
-      axios.get(url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name, {
+      var downloadLink=url.url+"/api/downloadFile?dir="+this.nowDir+"/";
+      if(this.showView){
+        downloadLink+=this.nowView.name
+      }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
+        downloadLink+=this.selectedList[0].name;
+      }else{
+        return;
+      }
+      axios.get(downloadLink, {
         responseType: 'arraybuffer', 
         headers: {
           username: localStorage.getItem("username"),
@@ -451,7 +464,8 @@ export default {
         // 释放URL对象
         window.URL.revokeObjectURL(link.href);
       }).catch((error)=>{
-        console.error('用户验证失败', error);
+        console.error('用户验证错误', error);
+        this.$message.error("用户验证失败")
       })
     },
     
