@@ -61,7 +61,6 @@
       </div>
       <div class="viewer_main">
         <div v-if="getFileType(nowView)=='video'" class="video_player">
-          <!-- <video id="player"  playsinline controls :src="fileLink"></video> -->
           <vue-plyr>
             <video crossorigin playsinline controls :src="fileLink"></video>
           </vue-plyr>
