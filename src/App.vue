@@ -51,7 +51,6 @@
     <div :class="goCloseView ? 'fileViewer_after':'fileViewer'" v-if="showView">
       <div class="infoBar"> 
         <div class="viewer_fileName">{{ nowView.name }}</div>
-        <div></div>
         <div class="viewer_download">
           <div class="viewer_downloadBt" @click="downloadHandler">下载</div>
         </div>
@@ -1120,7 +1119,7 @@ export default {
   width: 100vw;
   height: 50px;
   background-color: white;
-  grid-template-columns: 300px auto 50px 50px;
+  grid-template-columns: auto 50px 50px;
 }
 .fileName{
   overflow: hidden;
@@ -1240,6 +1239,9 @@ export default {
     width: 100%;
     /* background-color: blue; */
     padding-bottom: 70px;
+  }
+  .video_player{
+    max-width: 95vw;
   }
   .uploadPanel{
     width: calc(100vw - 40px);
