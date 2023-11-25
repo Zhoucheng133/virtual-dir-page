@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @dragenter.prevent="handleDragEnter">
     <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
@@ -135,6 +135,23 @@
         </div>
       </div>
     </div>
+    <!-- 拖拽上传页面 -->
+    <div class="dragBg" v-show="isDragging">
+      <el-upload
+      class="dragView"
+      drag
+      :action="getUploadUrl()"
+      :show-file-list="false"
+      :on-progress="handleProgress"
+      :headers="{ username: userInfo.username, password: userInfo.password }"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :before-upload="beforeHandler"
+      multiple>
+        <div class="dragIcon"><i class="bi bi-file-earmark-arrow-up"></i></div>
+        <div class="dragText">将文件拖拽到这里上传</div>
+      </el-upload>
+    </div>
   </div>
 </template>
 
@@ -199,15 +216,20 @@ export default {
       uploadOk: 0,
       // 展开上传页
       showUpload: false,
-      // showUpload: true,
       // 上传页offset
       uploadHeight: 50,
-      // uploadHeight: 500,
       // 上传列表(用于查看百分比)
       uploadList: [],
+      // 显示drag提示
+      isDragging: false,
     }
   },
   methods: {
+    // 拖拽
+    handleDragEnter(){
+      this.isDragging = true;
+    },
+
     // 收起&展开上传列表
     uploadPanelController(){
       if(this.showUpload){
@@ -222,7 +244,8 @@ export default {
     beforeHandler(file){
       this.fileUpload.push(file);
       this.uploadHeight=500;
-      this.showUpload=!this.showUpload
+      this.showUpload=!this.showUpload;
+      this.isDragging=false;
     },
 
     // 上传失败
@@ -782,6 +805,35 @@ export default {
 </script>
 
 <style>
+.dragView{
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.dragBg{
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 300;
+}
+.el-upload-dragger{
+  border: none !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.dragText{
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.dragIcon{
+  font-size: 50px;
+}
 .statusIcon{
   font-size: 17px;
 }
@@ -1208,5 +1260,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  width: 100vw;
 }
 </style>
