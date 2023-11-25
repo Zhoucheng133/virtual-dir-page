@@ -37,7 +37,7 @@
           <div>大小</div>
         </div>
         <div v-for="(item, index) in list" :key="index">
-          <div class="fileItem">
+          <div class="fileItem" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
             <div class="icon" @click="openItem(item)">
               <img :src="getIconSrc(item)" width="30px" draggable="false">
@@ -229,16 +229,33 @@ export default {
     }
   },
   methods: {
+    // 是否启用下载
+    disableDownload(item){
+      if(item==undefined){
+        return true;
+      }else if(item.type=="dir"){
+        return true;
+      }
+      return false;
+    },
+
     // 右键菜单
-    onContextmenu(item){
+    onContextmenu(index, item){
       this.$contextmenu({
         items: [
           {
             label: "打开",
-            icon: "bi-file-arrow-down",
             disabled: item == undefined ? true : false,
             onClick: () => {
-              this.linkTO(item)
+              this.openItem(item);
+            }
+          },
+          {
+            label: "下载",
+            icon: "bi-file-arrow-down",
+            disabled: this.disableDownload(item),
+            onClick: () => {
+              this.downloadHandler(item);
             }
           },
           {
@@ -258,9 +275,12 @@ export default {
           },
           {
             label: "重命名",
+            icon: "bi-pencil-square",
             disabled: item == undefined ? true : false,
             onClick: () => {
-              this.handleRename(item.name);
+              this.list[index].selected=true;
+              this.selectedList.push(item);
+              this.reNameHandler();
             }
           },
           {
@@ -268,7 +288,9 @@ export default {
             icon: "bi-trash3",
             disabled: item == undefined ? true : false,
             onClick: () => {
-              this.handleDel(item);
+              this.list[index].selected=true;
+              this.selectedList.push(item);
+              this.delHandler();
             }
           }
         ],
@@ -492,13 +514,15 @@ export default {
     },
 
     // 下载文件
-    downloadHandler(){
+    downloadHandler(item){
       // document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
       var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
       if(this.showView){
         downloadLink+=encodeURIComponent(this.nowView.name)
       }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
         downloadLink+=encodeURIComponent(this.selectedList[0].name);
+      }else if(item!=undefined && item.type!="dir"){
+        downloadLink+=encodeURIComponent(item.name);
       }else{
         return;
       }
