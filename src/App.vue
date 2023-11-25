@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @dragenter.prevent="handleDragEnter">
+  <div id="app" @dragenter.prevent="handleDragEnter" @contextmenu.prevent.stop="onContextmenu()">
     <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
@@ -229,6 +229,57 @@ export default {
     }
   },
   methods: {
+    // 右键菜单
+    onContextmenu(item){
+      this.$contextmenu({
+        items: [
+          {
+            label: "打开",
+            icon: "bi-file-arrow-down",
+            disabled: item == undefined ? true : false,
+            onClick: () => {
+              this.linkTO(item)
+            }
+          },
+          {
+            label: "刷新",
+            icon: "bi-arrow-clockwise",
+            onClick: () => {
+              this.reload();
+            },
+            divided: true
+          },
+          {
+            label: "新建文件夹",
+            icon: "bi-folder-plus",
+            onClick: () => {
+              this.newFolderHandler();
+            }
+          },
+          {
+            label: "重命名",
+            disabled: item == undefined ? true : false,
+            onClick: () => {
+              this.handleRename(item.name);
+            }
+          },
+          {
+            label: "删除",
+            icon: "bi-trash3",
+            disabled: item == undefined ? true : false,
+            onClick: () => {
+              this.handleDel(item);
+            }
+          }
+        ],
+        event,
+        customClass: "custom-class",
+        zIndex: 3,
+        minWidth: 150
+      });
+      return false;
+    },
+
     // 是否可以下载
     canDownload(){
       // if(this.selectedList.length==0){
@@ -242,6 +293,12 @@ export default {
         return true;
       }
       return false;
+    },
+
+    // 刷新列表
+    reload(){
+      this.getList();
+      this.$message.success("已刷新")
     },
 
     // 拖拽

@@ -9,6 +9,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VuePlyr from 'vue-plyr'
 import 'vue-plyr/dist/vue-plyr.css'
+import Contextmenu from "vue-contextmenujs"
 
 Vue.use(ElementUI);
 Vue.use(VuePlyr, {
@@ -16,6 +17,7 @@ Vue.use(VuePlyr, {
 })
 Vue.use(Antd);
 Vue.use(VBodyScrollLock)
+Vue.use(Contextmenu);
 
 Vue.config.productionTip = false
 
