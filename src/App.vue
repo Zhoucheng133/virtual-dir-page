@@ -114,7 +114,8 @@
       cancelText="取消" 
       okText="确定"
       style="user-select: none;"
-      @ok="reNameOK">
+      @ok="reNameOK" 
+      @cancel="reNameCancel">
       <a-input v-model="reName" placeholder="新的文件/文件夹名"></a-input>
     </a-modal>
     <!-- 上传进度 -->
@@ -436,8 +437,21 @@ export default {
           that.delOK();
         },
         onCancel() {
+          that.selectedList=[];
+          for(var item of that.list){
+            item.selected=false;
+          }
         },
       });
+    },
+
+    // 取消重命名
+    reNameCancel(){
+      this.showReName=false;
+      this.selectedList=[];
+      for(var item of this.list){
+        item.selected=false;
+      }
     },
 
     // 重命名
