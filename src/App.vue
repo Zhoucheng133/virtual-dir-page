@@ -21,6 +21,7 @@
         >
           <div class="upload_button">上传</div>
         </el-upload>
+        <div :class="selectedList.length==0 ? 'download_button_disabled' : 'download_button'"><i class="bi bi-download"></i></div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
@@ -1160,6 +1161,24 @@ export default {
   font-weight: 400;
   padding-right: 10px;
   padding-left: 10px;
+}
+.download_button_disabled{
+  background-color: grey;
+  cursor: not-allowed;
+}
+.download_button:hover{
+  background-color: rgb(0, 108, 210);
+  cursor: pointer;
+}
+.download_button{
+  background-color: rgb(24, 144, 255);
+}
+.download_button, .download_button_disabled{
+  color: white;
+  padding: 5px 10px 5px 10px;
+  border-radius: 6px;
+  margin-right: 10px;
+  transition: all linear .2s;
 }
 .rename_button_disabled, .del_button_disabled{
   cursor: not-allowed;
