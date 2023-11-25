@@ -39,7 +39,7 @@
           <div class="fileItem">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
             <div class="icon" @click="openItem(item)">
-              <img :src="getIconSrc(item)" width="30px">
+              <img :src="getIconSrc(item)" width="30px" draggable="false">
             </div>
             <div class="fileName" @click="openItem(item)">{{ item.name }}</div>
             <div class="size" @click="openItem(item)">{{ formatBytes(item.size) }}</div>
@@ -64,9 +64,9 @@
           <video id="player"  playsinline controls :src="fileLink"></video>
         </div>
         <audio id="player" class="audio_player" controls :src="fileLink" v-else-if="getFileType(nowView)=='audio'"></audio>
-        <img class="image_viewer" :src="fileLink" v-else-if="getFileType(nowView)=='image'">
+        <img class="image_viewer" :src="fileLink" v-else-if="getFileType(nowView)=='image'" draggable="false">
         <iframe class="pdf_viewer" v-else-if="getFileType(nowView)=='pdf'" :src="fileLink" frameborder="0"></iframe>
-        <img v-else :src="getIconSrc(nowView)" width="150px">
+        <img v-else :src="getIconSrc(nowView)" width="150px" draggable="false">
       </div>
     </div>
     <!-- 加载界面 -->
@@ -117,6 +117,20 @@
         <div class="uploadTitle">上传列表</div>
         <i v-if="showUpload" class="bi bi-caret-down-fill uploadArrow"></i>
         <i v-else class="bi bi-caret-up-fill uploadArrow"></i>
+      </div>
+      <div class="uploadList">
+        <div class="listContent" v-for="(item, index) in uploadList" :key="index">
+          <div class="progressBg" :style="{'width': item.percentage+'%'}"></div>
+          <div class="listImg"><img :src="getIconSrc(item)" width="30px" draggable="false"></div>
+          <div class="listInfo">
+            <div class="listFileName">{{ item.name }}</div>
+            <div class="listFileSize">{{ formatBytes(item.size) }}</div>
+          </div>
+          <div class="statusIcon">
+            <i v-if="item.status=='success'" class="bi bi-check-circle"></i>
+            <i v-else class="bi bi-file-earmark-arrow-up"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -188,7 +202,34 @@ export default {
       // uploadHeight: 50,
       uploadHeight: 500,
       // 上传列表(用于查看百分比)
-      uploadList: [],
+      uploadList: [
+        {
+          "status": "uploading",
+          "name": "一张平平无奇的图片图片图片图片图片图片图片图片.png",
+          "size": 1307937,
+          "percentage": 70,
+          "uid": 1700874637068,
+          "raw": {
+            "uid": 1700874637068
+          },
+          "response": {
+            "status": true
+          }
+        },
+        {
+          "status": "success",
+          "name": "测试文件.zip",
+          "size": 656178212,
+          "percentage": 100,
+          "uid": 1700874637068,
+          "raw": {
+            "uid": 1700874637068
+          },
+          "response": {
+            "status": true
+          }
+        }
+      ],
     }
   },
   methods: {
@@ -751,6 +792,59 @@ export default {
 </script>
 
 <style>
+.statusIcon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+.progressBg{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(237, 246, 255);
+  z-index: -10;
+  left: 0;
+  top: 0;
+  border-bottom: 2px solid rgb(24, 144, 255);
+  transition: all ease-in-out .2s;
+}
+.listFileSize{
+  color: grey;
+}
+.listFileName{
+  font-weight: bold;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.listInfo{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+.listImg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: lightcyan; */
+}
+.listContent{
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50px auto 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  align-items: center;
+  /* background-color: orange; */
+  height: 70px;
+}
 .uploadArrow{
   margin-left: auto;
   font-size: 13px;
