@@ -1,6 +1,6 @@
 <template>
-  <div id="app" @dragenter.prevent="handleDragEnter" @dragleave.prevent.stop="handleDragLeave" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu">
-    <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
+  <div id="app" @dragenter.prevent="handleDragEnter" @dragleave.prevent.stop="handleDragLeave" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu" :style="{ height: appHeight }">
+    <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
@@ -169,6 +169,8 @@ const CryptoJS = require("crypto-js");
 export default {
   data() {
     return {
+      // app高度
+      appHeight: '100vh',
       // 播放器
       player: undefined,
       // 当前文件/文件夹列表
@@ -232,6 +234,14 @@ export default {
     }
   },
   methods: {
+    // 更新app高度
+    updateHeight() {
+      this.$nextTick(() => {
+        const mainPageHeight = this.$refs.mainRef.clientHeight;
+        this.appHeight = mainPageHeight > window.innerHeight ? mainPageHeight+'px' : '100vh';
+      });
+    },
+
     // 拖拽离开
     handleDragLeave(event){
       event.preventDefault();
@@ -258,7 +268,7 @@ export default {
     // 右键菜单
     onContextmenu(index, item){
       this.rightClickIndex=index;
-      console.log("showMenu");
+      // console.log("showMenu");
       this.$contextmenu({
         items: [
           {
@@ -880,7 +890,7 @@ export default {
 
     // 自动滚动目录到最右边
     autoScrollDir(){
-      console.log("autoScroll");
+      // console.log("autoScroll");
       var that=this;
       this.$nextTick(() => {
         that.$refs.headRef.scrollTo({
@@ -917,6 +927,9 @@ export default {
     nowDir: function(){
       this.autoScrollDir();
       this.selectedList=[];
+    },
+    list: function(){
+      this.updateHeight();
     },
     needLogin: function(){
       this.autoScrollDir();
@@ -1419,7 +1432,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100vh;
   width: 100%;
 }
 </style>
