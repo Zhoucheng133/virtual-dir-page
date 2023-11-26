@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @dragenter.prevent="handleDragEnter" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu">
+  <div id="app" @dragenter.prevent="handleDragEnter" @dragleave.prevent.stop="handleDragLeave" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu">
     <div class="main" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
@@ -232,6 +232,14 @@ export default {
     }
   },
   methods: {
+    // 拖拽离开
+    handleDragLeave(event){
+      event.preventDefault();
+      if (event.clientX == 0 && event.clientY == 0) {
+        this.isDragging = false;
+      }
+    },
+
     // 取消鼠标点击
     hideMenu(){
       this.rightClickIndex=null;
