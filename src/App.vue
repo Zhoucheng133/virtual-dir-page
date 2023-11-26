@@ -300,6 +300,10 @@ export default {
             icon: "bi-pencil-square",
             disabled: item == undefined ? true : false,
             onClick: () => {
+              for(var val of this.list){
+                val.selected=false;
+              }
+              this.selectedList=[];
               this.list[index].selected=true;
               this.selectedList.push(item);
               this.reNameHandler();
@@ -311,6 +315,10 @@ export default {
             icon: "bi-trash3",
             disabled: item == undefined ? true : false,
             onClick: () => {
+              for(var item of this.list){
+                item.selected=false;
+              }
+              this.selectedList=[];
               this.list[index].selected=true;
               this.selectedList.push(item);
               this.delHandler();
