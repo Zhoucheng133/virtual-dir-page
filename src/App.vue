@@ -1400,7 +1400,8 @@ export default {
   width: 800px;
   padding-left: 10px;
   padding-right: 10px;
-  backdrop-filter: blur(15px);
+  /* backdrop-filter: blur(15px); */
+  background-color: white;
 }
 
 .body{
