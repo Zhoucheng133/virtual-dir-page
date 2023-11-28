@@ -1,6 +1,6 @@
 <template>
   <div id="app" @dragenter.prevent="handleDragEnter" @dragleave.prevent.stop="handleDragLeave" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu" :style="{ height: appHeight }">
-    <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
+    <div class="fixItem">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
@@ -26,16 +26,18 @@
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
       </div>
-      <div class="tools" style="margin-top: 15px;margin-left: 10px;">
+      <div class="tools" style="padding-top: 15px;padding-left: 10px;">
         <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
       </div>
+      <div class="listTitle">
+        <div></div>
+        <div></div>
+        <div>名称</div>
+        <div>大小</div>
+      </div>
+    </div>
+    <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
       <div class="body">
-        <div class="listTitle">
-          <div></div>
-          <div></div>
-          <div>名称</div>
-          <div>大小</div>
-        </div>
         <div v-for="(item, index) in list" :key="index">
           <div :class="rightClickIndex==index ? 'menuItem' : 'fileItem'" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
@@ -1293,6 +1295,7 @@ export default {
   font-weight: bolder;
   padding-right: 10px;
   padding-left: 10px;
+  /* background-color: white; */
 }
 .fileItem:hover{
   cursor: pointer;
@@ -1365,10 +1368,14 @@ export default {
   cursor: pointer;
 }
 .tools{
-  margin-top: 5px;
+  padding-top: 5px;
   display: flex;
   align-items: center;
   user-select: none;
+  /* background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px); */
+  /* background-color: white; */
+  width: 100%;
 }
 .itemDir_end{
   font-weight: bold;
@@ -1386,13 +1393,32 @@ export default {
   background-color: rgb(218, 237, 255);
   color: rgb(24, 144, 255);
 }
+.fixItem{
+  position: fixed;
+  width: 100%;
+  z-index: 50;
+  width: 800px;
+  padding-left: 10px;
+  padding-right: 10px;
+  backdrop-filter: blur(15px);
+}
+
+.body{
+  margin-top: 159px;
+}
+
 .head{
+  padding-top: 20px;
   font-size: 18px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   display: flex;
   align-items: center;
   overflow: auto;
   padding-bottom: 10px;
+  /* background-color: white; */
+  width: 100%;
+  /* background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px); */
 }
 .main{
   width: 800px;
@@ -1407,6 +1433,9 @@ export default {
 }
 
 @media screen and (max-width: 800px) {
+  .fixItem{
+    width: 100%;
+  }
   .main{
     width: 100%;
     /* background-color: blue; */
