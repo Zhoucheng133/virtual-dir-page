@@ -135,7 +135,7 @@
           <div class="listImg"><img :src="getIconSrc(item)" width="30px" draggable="false"></div>
           <div class="listInfo">
             <div class="listFileName">{{ item.name }}</div>
-            <div class="listFileSize">{{ formatBytes(item.size) }}</div>
+            <div class="listFileSize">{{ formatBytes(item.size * item.percentage / 100) }} / {{ formatBytes(item.size) }}</div>
           </div>
           <div class="statusIcon">
             <i v-if="item.status=='success'" class="bi bi-check-circle"></i>
