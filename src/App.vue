@@ -319,6 +319,7 @@ export default {
               this.selectedList=[];
               this.list[index].selected=true;
               this.selectedList.push(item);
+              console.log(this.selectedList);
               this.reNameHandler();
               this.rightClickIndex=null;
             }
@@ -328,8 +329,8 @@ export default {
             icon: "bi-trash3",
             disabled: item == undefined ? true : false,
             onClick: () => {
-              for(var item of this.list){
-                item.selected=false;
+              for(var val of this.list){
+                val.selected=false;
               }
               this.selectedList=[];
               this.list[index].selected=true;
