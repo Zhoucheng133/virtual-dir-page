@@ -1,6 +1,6 @@
 <template>
   <div id="app" @dragenter.prevent="handleDragEnter" @dragleave.prevent.stop="handleDragLeave" @contextmenu.prevent.stop="onContextmenu()" @click="hideMenu" :style="{ height: appHeight }">
-    <div class="fixItem">
+    <div class="fixItem" v-if="!needLogin">
       <div class="head" ref="headRef">
         <div :class="dir.length==0 ? 'itemDir_end' : 'itemDir'" @click="toDir(-1)">Root</div>
         <div v-for="(item, index) in dir" :key="index" style="display: flex;">
@@ -352,17 +352,12 @@ export default {
 
     // 是否可以下载
     canDownload(){
-      // if(this.selectedList.length==0){
-      //   return false;
-      // }else if(this.selectedList.some(obj => obj.type === 'dir')){
-      //   return false;
-      // }
-      // return true;
-      // (上)预留位
-      if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
-        return true;
+      if(this.selectedList.length==0){
+        return false;
+      }else if(this.selectedList.some(obj => obj.type === 'dir')){
+        return false;
       }
-      return false;
+      return true;
     },
 
     // 刷新列表
