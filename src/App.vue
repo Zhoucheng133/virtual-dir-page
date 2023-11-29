@@ -131,7 +131,7 @@
       </div>
       <div class="uploadList">
         <div class="listContent" v-for="(item, index) in uploadList" :key="index">
-          <div class="progressBg" :style="{'width': item.percentage+'%'}" v-if="item.status!='success'"></div>
+          <div class="progressBg" :style="{'width': item.percentage+'%'}" v-if="item.status=='uploading'"></div>
           <div class="listImg"><img :src="getIconSrc(item)" width="30px" draggable="false"></div>
           <div class="listInfo">
             <div class="listFileName">{{ item.name }}</div>
@@ -139,7 +139,8 @@
           </div>
           <div class="statusIcon">
             <i v-if="item.status=='success'" class="bi bi-check-circle"></i>
-            <i v-else class="bi bi-file-earmark-arrow-up"></i>
+            <i v-else-if="item.status=='uploading'" class="bi bi-file-earmark-arrow-up"></i>
+            <i v-else class="bi bi-x-circle" style="color: red;"></i>
           </div>
         </div>
       </div>
@@ -420,6 +421,11 @@ export default {
     // 判断是否需要添加到上传列表
     addToUploadList(newObj){
       const index = this.uploadList.findIndex(obj => obj.name === newObj.name && obj.size === newObj.size);
+
+      if(newObj.status=="fail"){
+        this.$message.error("上传失败，不要上传文件夹!");
+        return;
+      }
 
       if (index !== -1) {
         // 如果存在，替换数组中的对象
