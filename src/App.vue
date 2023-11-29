@@ -55,7 +55,7 @@
       <div class="infoBar"> 
         <div class="viewer_fileName">{{ nowView.name }}</div>
         <div class="viewer_download">
-          <div class="viewer_downloadBt" @click="downloadHandler">下载</div>
+          <div class="viewer_downloadBt" @click="downloadHandler()">下载</div>
         </div>
         <div class="viewer_close" @click="closeView">
           <i class="bi bi-x"></i>
@@ -579,19 +579,26 @@ export default {
 
     // 下载文件
     downloadHandler(item){
-      // document.location.href=url.url+"/api/downloadFile?dir="+this.nowDir+"/"+this.nowView.name;
-      var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
-      if(this.showView){
-        downloadLink+=encodeURIComponent(this.nowView.name)
-      }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
-        downloadLink+=encodeURIComponent(this.selectedList[0].name);
-      }else if(item!=undefined && item.type!="dir"){
+      if(item!=undefined && item.type!="dir"){
+        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
         downloadLink+=encodeURIComponent(item.name);
-      }else{
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
         return;
+      }else if(this.showView){
+        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+        downloadLink+=encodeURIComponent(this.nowView.name)
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
+      }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
+        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+        downloadLink+=encodeURIComponent(this.selectedList[0].name);
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
+      }else if(this.selectedList.length>1 && canDownload()){
+        var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+        
       }
-      downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-      window.location.href=downloadLink;
     },
     
     // 关闭预览
