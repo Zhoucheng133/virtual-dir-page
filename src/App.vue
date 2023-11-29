@@ -800,6 +800,34 @@ export default {
       return Math.round((bytes / Math.pow(1000, i)) * 100) / 100 + ' ' + sizes[i];
     },
 
+    // 排序方法
+    customSort(a, b) {
+      let i = 0;
+
+      while (i < a.length && i < b.length) {
+        const charA = a.charAt(i);
+        const charB = b.charAt(i);
+
+        if (charA !== charB) {
+          if (isNaN(charA) || isNaN(charB)) {
+            // 如果不是数字，则按照默认字符串比较规则排序
+            return charA.localeCompare(charB);
+          } else {
+            // 如果是数字，则按照数字大小从小到大排序
+            const numA = parseInt(a.substring(i), 10) || 0;
+            const numB = parseInt(b.substring(i), 10) || 0;
+
+            return numA - numB;
+          }
+        }
+
+        i++;
+      }
+
+      // 如果前面的字符都相同，则按照长度比较
+      return a.length - b.length;
+    },
+
     // 获取目录
     getList(){
       this.isLoading=true;
@@ -819,21 +847,8 @@ export default {
           } else if (a.type !== "dir" && b.type === "dir") {
             return 1;
           }
-          // 如果type相同，按照name的字符串排序，考虑数字
-          // 提取字符串和数字部分
-          const strA = a.name.replace(/\d+/g, "");
-          const strB = b.name.replace(/\d+/g, "");
-          // 比较字符串部分
-          if (strA < strB) {
-            return -1;
-          } else if (strA > strB) {
-            return 1;
-          }
-          const numA = parseInt(a.name.match(/\d+/), 10) || 0;
-          const numB = parseInt(b.name.match(/\d+/), 10) || 0;
-
-          return numA - numB;
-
+          
+          return this.customSort(a.name, b.name)
         }).filter((item)=>{
           return !item.name.startsWith(".");
         });
