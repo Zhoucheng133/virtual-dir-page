@@ -234,6 +234,8 @@ export default {
       isDragging: false,
       // 右键菜单选中的item
       rightClickIndex: null,
+      // 上传失败的个数
+      // uploadFailed: 0,
     }
   },
   methods: {
@@ -395,22 +397,24 @@ export default {
     // 上传失败
     handleError(){
       this.$message.error('上传失败');
+      this.fileUpload=[];
+      this.uploadOk=0;
     },
 
     // 上传成功
     handleSuccess(response){
       if (response.status) {
         this.uploadOk+=1
-        console.log("完成数量: "+this.uploadOk);
       } else {
         this.$message.error('上传失败');
+        this.fileUpload=[];
+        this.uploadOk=0;
       }
       if(this.uploadOk==this.fileUpload.length){
         this.$message.success('上传成功');
         this.fileUpload=[];
         this.uploadOk=0;
         this.getList();
-        // console.log(this.fileUpload);
       }
     },
 
