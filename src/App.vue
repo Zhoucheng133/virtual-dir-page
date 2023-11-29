@@ -21,7 +21,7 @@
         >
           <div class="upload_button">上传</div>
         </el-upload>
-        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'" @click="downloadHandler"><i class="bi bi-download"></i></div>
+        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'" @click="downloadHandler()"><i class="bi bi-download"></i></div>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
