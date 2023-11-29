@@ -396,9 +396,10 @@ export default {
 
     // 上传失败
     handleError(){
-      this.$message.error('上传失败');
+      this.$message.error('一个或多个文件上传失败');
       this.fileUpload=[];
       this.uploadOk=0;
+      this.getList();
     },
 
     // 上传成功
