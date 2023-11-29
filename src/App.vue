@@ -595,9 +595,13 @@ export default {
         downloadLink+=encodeURIComponent(this.selectedList[0].name);
         downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
         window.location.href=downloadLink;
-      }else if(this.selectedList.length>1 && canDownload()){
+      }else if(this.selectedList.length>1 && this.canDownload()){
         var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
-        
+        const filesArray = this.selectedList.map(obj => encodeURIComponent(obj.name));
+        const files=JSON.stringify(filesArray);
+        downloadLink+="&files="+files;
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
       }
     },
     
