@@ -400,7 +400,7 @@ export default {
     handleSuccess(response){
       if (response.status) {
         this.uploadOk+=1
-        // console.log("完成数量: "+this.uploadOk);
+        console.log("完成数量: "+this.uploadOk);
       } else {
         this.$message.error('上传失败');
       }
@@ -777,6 +777,7 @@ export default {
         case 'wav':
         case 'ogg':
         case 'flac':
+        case 'm4a':
           return 'audio';
         case 'mp4':
         case 'avi':
