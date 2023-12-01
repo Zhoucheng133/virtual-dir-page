@@ -611,7 +611,7 @@ export default {
 
     // 获取到文件地址
     fileLinkGet(){
-      return url.url+"/api/getFile?dir="+this.nowDir+"/"+this.nowView.name+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      return url.url+"/api/getFile?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(this.nowView.name)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
     },
 
     // 跳转到某个目录
