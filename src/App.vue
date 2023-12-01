@@ -239,13 +239,6 @@ export default {
     }
   },
   methods: {
-    // 更新app高度
-    updateHeight() {
-      this.$nextTick(() => {
-        const mainPageHeight = this.$refs.mainRef.clientHeight;
-        this.appHeight = mainPageHeight > window.innerHeight ? mainPageHeight+'px' : '100vh';
-      });
-    },
 
     // 拖拽离开
     handleDragLeave(event){
@@ -879,42 +872,67 @@ export default {
     },
 
     // 自动登录
-    autoLogin(){
-      if(localStorage.getItem("username")==this.userInfo.username && localStorage.getItem("password")==this.userInfo.password){
-        this.getList();
-        return true;
-      }else{
-        localStorage.clear();
-        return false;
-      }
+    async autoLogin(){
+      var flag=false;
+      await axios.get(url.url+"/api/loginRequest",{
+        params: {
+          username: localStorage.getItem("username"),
+          password: localStorage.getItem("password"),
+        },
+      }).then((response)=>{
+        if(response.data.status){
+          flag=true;
+          this.userInfo.username=localStorage.getItem("username");
+          this.userInfo.password=localStorage.getItem("password");
+        }else{
+          flag=false;
+        }
+      }).catch(()=>{
+        flag=false;
+      })
+      return flag;
     },
 
     // 登录
-    loginHandler(){
-      if(CryptoJS.SHA256(this.inputUserInfo.username).toString()==this.userInfo.username && CryptoJS.SHA256(this.inputUserInfo.password).toString()==this.userInfo.password){
-        this.$message.success("登录成功");
-        this.goCloseLogin=true;
-        localStorage.setItem("username", this.userInfo.username);
-        localStorage.setItem("password", this.userInfo.password);
-        this.getList();
+    async loginHandler(){
+      var flag=false;
+
+      await axios.get(url.url+"/api/loginRequest",{
+        params: {
+          username: CryptoJS.SHA256(this.inputUserInfo.username).toString(),
+          password: CryptoJS.SHA256(this.inputUserInfo.password).toString(),
+        },
+      }).then((response)=>{
+        if(response.data.status){
+          flag=true
+        }else{
+          this.$message.error("登录失败: 用户名或密码不正确");
+        }
+      }).catch(()=>{
+        this.$message.error("登录失败: 登录请求错误");
+      })
+
+      if(flag==true){
+        localStorage.setItem("username", CryptoJS.SHA256(this.inputUserInfo.username).toString());
+        localStorage.setItem("password", CryptoJS.SHA256(this.inputUserInfo.password).toString());
         setTimeout(() => {
           this.needLogin=false;
           this.goCloseLogin=false;
         }, 200);
-      }else{
-        this.$message.error("登录失败: 用户名或密码不正确");
+        this.userInfo.username=CryptoJS.SHA256(this.inputUserInfo.username).toString();
+        this.userInfo.password=CryptoJS.SHA256(this.inputUserInfo.password).toString();
+        this.getList();
       }
     },
 
     // 请求用户信息
-    getUserInfo(){
+    needLoginController(){
       axios.get(url.url+"/api/authRequest")
-      .then((response)=>{
+      .then(async (response)=>{
         if(response.data.needLogin){
-          this.userInfo.username=response.data.username;
-          this.userInfo.password=response.data.password;
-          if(this.autoLogin()){
+          if(await this.autoLogin()){
             this.needLogin=false;
+            this.getList();
           }
         }else{
           this.getList();
@@ -948,7 +966,7 @@ export default {
 
   created() {
     document.title="虚拟目录";
-    this.getUserInfo();
+    this.needLoginController();
   },
 
   mounted() {
@@ -963,9 +981,6 @@ export default {
     nowDir: function(){
       this.autoScrollDir();
       this.selectedList=[];
-    },
-    list: function(){
-      this.updateHeight();
     },
     needLogin: function(){
       this.autoScrollDir();
