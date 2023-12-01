@@ -645,12 +645,6 @@ export default {
         // 注意! 根据情况展示
         this.showView=true;
         this.nowView=item;
-        // if(this.getFileType(this.nowView)=='video' || this.getFileType(this.nowView)=='audio'){
-        //   var that=this;
-        //   this.$nextTick(() => {
-        //     that.player = new Plyr('#player');
-        //   });
-        // }
       }
     },
 
@@ -915,13 +909,13 @@ export default {
       if(flag==true){
         localStorage.setItem("username", CryptoJS.SHA256(this.inputUserInfo.username).toString());
         localStorage.setItem("password", CryptoJS.SHA256(this.inputUserInfo.password).toString());
+        this.userInfo.username=CryptoJS.SHA256(this.inputUserInfo.username).toString();
+        this.userInfo.password=CryptoJS.SHA256(this.inputUserInfo.password).toString();
+        this.getList();
         setTimeout(() => {
           this.needLogin=false;
           this.goCloseLogin=false;
         }, 200);
-        this.userInfo.username=CryptoJS.SHA256(this.inputUserInfo.username).toString();
-        this.userInfo.password=CryptoJS.SHA256(this.inputUserInfo.password).toString();
-        this.getList();
       }
     },
 
@@ -1193,6 +1187,9 @@ export default {
   background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
   height: 100vh;
   width: 100vw;
+  animation: opacityIn .2s forwards linear;
+  opacity: 0;
+  animation-delay: 500ms;
 }
 .loadingView{
   animation: opacityIn .2s forwards linear;
