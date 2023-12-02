@@ -356,6 +356,10 @@ export default {
     // 刷新列表
     reload(){
       this.getList();
+      this.selectedList=[];
+      for(var val of this.list){
+        val.selected=false;
+      }
       this.$message.success("已刷新")
     },
 
