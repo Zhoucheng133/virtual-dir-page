@@ -41,12 +41,14 @@
             <a-menu-item>
               <el-upload
                 ref="uploadDirRef"
+                :before-upload="beforeHandler"
                 :action="getUploadDirUrl()"
                 :show-file-list="false"
                 :on-progress="handleProgress"
                 :headers="{ username: userInfo.username, password: userInfo.password }"
                 :on-success="handleSuccess"
                 :on-error="handleError"
+                multiple
               >
               <div>上传文件夹</div>
               </el-upload>
@@ -474,7 +476,7 @@ export default {
       const index = this.uploadList.findIndex(obj => obj.name === newObj.name && obj.size === newObj.size);
 
       if(newObj.status=="fail"){
-        this.$message.error("上传失败，不要上传文件夹!");
+        this.$message.error("上传失败!");
         return;
       }
 
@@ -489,6 +491,7 @@ export default {
 
     // 上传进度
     handleProgress(event, file, fileList){
+      // console.log(file);
       fileList.forEach((file) => {
         this.addToUploadList(file);
       });
