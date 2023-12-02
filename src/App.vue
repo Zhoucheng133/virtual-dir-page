@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="tools">
-        <a-dropdown @visibleChange="changeUploadMode">
+        <a-dropdown>
           <a-button type="primary">上传</a-button>
           <a-menu slot="overlay">
             <a-menu-item>
@@ -257,17 +257,43 @@ export default {
     }
   },
   methods: {
-    handleDirChange(){
-
+    // 处理上传的文件
+    uploadFiles(formData) {
+      axios.post(this.getUploadUrl(formData.get("paths")), formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          username: this.userInfo.username, 
+          password: this.userInfo.password
+        },
+        onUploadProgress: function(progressEvent) {
+          let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          console.log(percentCompleted);
+        }
+      }).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.error(error);
+      });
     },
+
+    // 上传文件夹变化
+    handleDirChange(event){
+      for (let i = 0; i < event.target.files.length; i++) {
+        var formData = new FormData();
+        formData.append('files', event.target.files[i]);
+        formData.append('paths', event.target.files[i].webkitRelativePath);
+        this.uploadFiles(formData);
+        // console.log(formData.get("paths"));
+      }
+    },
+
     // 上传文件夹进度
     handleDirProgress(){
       // 测试
     },
 
-    // 获取上传文件夹地址
+    // 上传文件夹
     uploadDir(){
-      // return url.url+"/api/upload?dir="+this.nowDir;
       this.$refs.fileInput.click();
     },
 
@@ -444,8 +470,12 @@ export default {
     },
 
     // 获取上传url
-    getUploadUrl(){
-      return url.url+"/api/upload?dir="+this.nowDir;
+    getUploadUrl(path){
+      if(path==undefined){
+        return url.url+"/api/upload?dir="+encodeURIComponent(this.nowDir)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");;
+      }else{
+        return url.url+"/api/upload?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(path)+"&isDir=true"+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");;
+      }
     },
 
     // 判断是否需要添加到上传列表
