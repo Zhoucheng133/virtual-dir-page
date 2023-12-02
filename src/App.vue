@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="tools">
-        <el-upload
+        <!-- <el-upload
           :action="getUploadUrl()"
           :show-file-list="false"
           :on-progress="handleProgress"
@@ -20,8 +20,41 @@
           multiple
         >
           <div class="upload_button">上传</div>
-        </el-upload>
-        <div :class="canDownload() ? 'download_button' : 'download_button_disabled'" @click="downloadHandler()"><i class="bi bi-download" style="margin-right: 5px;"></i>下载</div>
+        </el-upload> -->
+        <a-dropdown @visibleChange="changeUploadMode">
+          <a-button type="primary">上传</a-button>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <el-upload
+                :action="getUploadUrl()"
+                :show-file-list="false"
+                :on-progress="handleProgress"
+                :headers="{ username: userInfo.username, password: userInfo.password }"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+                :before-upload="beforeHandler"
+                multiple
+              >
+                <div>上传文件</div>
+              </el-upload>
+            </a-menu-item>
+            <a-menu-item>
+              <el-upload
+                ref="uploadDirRef"
+                :action="getUploadDirUrl()"
+                :show-file-list="false"
+                :on-progress="handleProgress"
+                :headers="{ username: userInfo.username, password: userInfo.password }"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+              >
+              <div>上传文件夹</div>
+              </el-upload>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
+        <!-- <div :class="canDownload() ? 'download_button' : 'download_button_disabled'" @click="downloadHandler()"><i class="bi bi-download" style="margin-right: 5px;"></i>下载</div> -->
+        <a-button style="margin-left: 10px;margin-right: 10px;" @click="downloadHandler()" :disabled="!canDownload()">下载</a-button>
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
@@ -239,6 +272,26 @@ export default {
     }
   },
   methods: {
+    // 更改上传模式
+    changeUploadMode(visible){
+      if(visible==true){
+        var that=this;
+        this.$nextTick(()=>{
+          that.$refs.uploadDirRef.$children[0].$refs.input.webkitdirectory = true;
+        })
+      }
+    },
+
+    // 上传文件夹进度
+    handleDirProgress(){
+      // 测试
+    },
+
+    // 获取上传文件夹地址
+    getUploadDirUrl(){
+      return url.url+"/api/upload?dir="+this.nowDir;
+    },
+
 
     // 拖拽离开
     handleDragLeave(event){
@@ -982,6 +1035,13 @@ export default {
     },
     needLogin: function(){
       this.autoScrollDir();
+      // if(newVal==false){
+      //   var that=this;
+      //   this.$nextTick(()=>{
+      //     // that.$refs.uploadDirRef.$children[0].$refs.input.webkitdirectory = true;
+      //     console.log(that.$refs.uploadDirRef);
+      //   })
+      // }
     },
     showView: function(newVal){
       this.lockScroll=newVal
