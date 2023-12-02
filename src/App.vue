@@ -301,6 +301,9 @@ export default {
     // 上传文件夹变化
     handleDirChange(event){
       for (let i = 0; i < event.target.files.length; i++) {
+        if(event.target.files[i].name.startsWith(".")){
+          continue;
+        }
         var formData = new FormData();
         formData.append('files', event.target.files[i]);
         formData.append('paths', event.target.files[i].webkitRelativePath);
