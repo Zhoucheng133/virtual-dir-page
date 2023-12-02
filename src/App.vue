@@ -9,18 +9,6 @@
         </div>
       </div>
       <div class="tools">
-        <!-- <el-upload
-          :action="getUploadUrl()"
-          :show-file-list="false"
-          :on-progress="handleProgress"
-          :headers="{ username: userInfo.username, password: userInfo.password }"
-          :on-success="handleSuccess"
-          :on-error="handleError"
-          :before-upload="beforeHandler"
-          multiple
-        >
-          <div class="upload_button">上传</div>
-        </el-upload> -->
         <a-dropdown @visibleChange="changeUploadMode">
           <a-button type="primary">上传</a-button>
           <a-menu slot="overlay">
@@ -39,19 +27,16 @@
               </el-upload>
             </a-menu-item>
             <a-menu-item>
-              <el-upload
-                ref="uploadDirRef"
-                :before-upload="beforeHandler"
-                :action="getUploadDirUrl()"
-                :show-file-list="false"
-                :on-progress="handleProgress"
-                :headers="{ username: userInfo.username, password: userInfo.password }"
-                :on-success="handleSuccess"
-                :on-error="handleError"
+              <input
+                type="file"
+                id="fileInput"
+                ref="fileInput"
+                @change="handleDirChange"
                 multiple
-              >
-              <div>上传文件夹</div>
-              </el-upload>
+                directory
+                webkitdirectory
+                style="display: none;" />
+              <div @click="uploadDir">上传文件夹</div>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -174,7 +159,7 @@
           </div>
           <div class="statusIcon">
             <i v-if="item.status=='success'" class="bi bi-check-circle"></i>
-            <i v-else-if="item.status=='uploading'" class="bi bi-file-earmark-arrow-up"></i>
+            <i v-else-if="item.status=='uploading' || item.status=='ready'" class="bi bi-file-earmark-arrow-up"></i>
             <i v-else class="bi bi-x-circle" style="color: red;"></i>
           </div>
         </div>
@@ -269,29 +254,21 @@ export default {
       isDragging: false,
       // 右键菜单选中的item
       rightClickIndex: null,
-      // 上传失败的个数
-      // uploadFailed: 0,
     }
   },
   methods: {
-    // 更改上传模式
-    changeUploadMode(visible){
-      if(visible==true){
-        var that=this;
-        this.$nextTick(()=>{
-          that.$refs.uploadDirRef.$children[0].$refs.input.webkitdirectory = true;
-        })
-      }
-    },
+    handleDirChange(){
 
+    },
     // 上传文件夹进度
     handleDirProgress(){
       // 测试
     },
 
     // 获取上传文件夹地址
-    getUploadDirUrl(){
-      return url.url+"/api/upload?dir="+this.nowDir;
+    uploadDir(){
+      // return url.url+"/api/upload?dir="+this.nowDir;
+      this.$refs.fileInput.click();
     },
 
 
@@ -491,7 +468,6 @@ export default {
 
     // 上传进度
     handleProgress(event, file, fileList){
-      // console.log(file);
       fileList.forEach((file) => {
         this.addToUploadList(file);
       });
