@@ -259,6 +259,7 @@ export default {
   methods: {
     // 处理上传的文件
     uploadFiles(formData) {
+      var that=this;
       axios.post(this.getUploadUrl(formData.get("paths")), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -267,10 +268,31 @@ export default {
         },
         onUploadProgress: function(progressEvent) {
           let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          console.log(percentCompleted);
+          that.addToUploadList({
+            name: formData.get('files').name,
+            percentage: percentCompleted,
+            status: "uploading",
+            size: formData.get('files').size
+          })
+          
         }
       }).then(response => {
-        console.log(response);
+        if(response.data.status){
+          this.addToUploadList({
+            name: formData.get('files').name,
+            percentage: 100,
+            status: "success",
+            size: formData.get('files').size
+          })
+        }else{
+          this.addToUploadList({
+            name: formData.get('files').name,
+            percentage: 100,
+            status: "fail",
+            size: formData.get('files').size
+          })
+        }
+        this.handleSuccess(response.data);
       }).catch(error => {
         console.error(error);
       });
@@ -282,14 +304,10 @@ export default {
         var formData = new FormData();
         formData.append('files', event.target.files[i]);
         formData.append('paths', event.target.files[i].webkitRelativePath);
+        this.beforeHandler(event.target.files[i]);
         this.uploadFiles(formData);
         // console.log(formData.get("paths"));
       }
-    },
-
-    // 上传文件夹进度
-    handleDirProgress(){
-      // 测试
     },
 
     // 上传文件夹
