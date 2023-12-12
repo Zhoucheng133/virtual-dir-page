@@ -336,8 +336,6 @@ export default {
     disableDownload(item){
       if(item==undefined){
         return true;
-      }else if(item.type=="dir"){
-        return true;
       }
       return false;
     },
@@ -425,8 +423,6 @@ export default {
     // 是否可以下载
     canDownload(){
       if(this.selectedList.length==0){
-        return false;
-      }else if(this.selectedList.some(obj => obj.type === 'dir')){
         return false;
       }
       return true;
@@ -678,6 +674,13 @@ export default {
       }else if(this.selectedList.length>1 && this.canDownload()){
         var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
         const filesArray = this.selectedList.map(obj => encodeURIComponent(obj.name));
+        const files=JSON.stringify(filesArray);
+        downloadLink+="&files="+files;
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
+      }else if(item.type=="dir"){
+        var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+        const filesArray = [encodeURIComponent(item.name)];
         const files=JSON.stringify(filesArray);
         downloadLink+="&files="+files;
         downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
