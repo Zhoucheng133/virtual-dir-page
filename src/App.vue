@@ -76,7 +76,10 @@
       <div style="margin-top: 129px;" class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
         <div v-for="(item, index) in list" :key="index">
           <div class="gridItem">
-            {{ item.name }}
+            <div class="gridIcon">
+              <img :src="getIconSrc(item)" width="80px" draggable="false">
+            </div>
+            <div class="gridName">{{ item.name }}</div>
           </div>
         </div>
       </div>
@@ -1134,8 +1137,17 @@ export default {
 </script>
 
 <style>
+.gridName{
+  margin-top: 10px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .gridItem{
-  height: 90px;
+  padding-top: 10px;
+  /* height: 120px; */
+  padding-bottom: 10px;
   width: 120px;
 }
 .gridView{
