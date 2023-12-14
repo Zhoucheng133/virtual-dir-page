@@ -45,6 +45,10 @@
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
+        <div class="viewStyle" @click="changeViewStyle">
+          <i class="bi bi-list-columns-reverse" v-if="!showInGrid"></i>
+          <i class="bi bi-grid-3x3" v-else></i>
+        </div>
       </div>
       <div class="tools" style="padding-top: 15px;padding-left: 10px;">
         <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
@@ -254,9 +258,15 @@ export default {
       isDragging: false,
       // 右键菜单选中的item
       rightClickIndex: null,
+      // 是否以网格布局显示
+      showInGrid: false,
     }
   },
   methods: {
+    // 切换显示模式
+    changeViewStyle(){
+      this.showInGrid=!this.showInGrid;
+    },
     // 处理上传的文件
     uploadFiles(formData) {
       var that=this;
@@ -1092,6 +1102,14 @@ export default {
 </script>
 
 <style>
+.viewStyle:hover{
+  cursor: pointer;
+}
+.viewStyle{
+  font-size: 15px;
+  margin-left: auto;
+  margin-right: 10px;
+}
 .dragView{
   background-color: rgba(255, 255, 255, 0.8);
 }
