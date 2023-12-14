@@ -53,7 +53,7 @@
       <div class="tools" style="padding-top: 15px;padding-left: 10px;">
         <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
       </div>
-      <div class="listTitle">
+      <div class="listTitle" v-if="!showInGrid">
         <div></div>
         <div></div>
         <div>名称</div>
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
-      <div class="body">
+      <div :style="{'margin-top': showInGrid ? '129px':'159px'}">
         <div v-for="(item, index) in list" :key="index">
           <div :class="rightClickIndex==index ? 'menuItem' : 'fileItem'" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
@@ -1563,10 +1563,6 @@ export default {
   padding-right: 10px;
   /* backdrop-filter: blur(15px); */
   background-color: white;
-}
-
-.body{
-  margin-top: 159px;
 }
 
 .head{
