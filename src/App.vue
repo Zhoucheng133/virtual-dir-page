@@ -80,7 +80,10 @@
               <a-checkbox @change="selectFile(index)" :checked="item.selected" @click.stop="stopDefault"></a-checkbox>
             </div>
             <div class="gridIcon">
-              <img :src="getIconSrc(item)" width="80px" draggable="false">
+              <img :src="getIconSrc(item)" v-if="getFileType(item)!='image'" width="80px" draggable="false">
+              <div v-else class="imgView">
+                <el-image :src="getFileContent(item)" style="max-width: 80px; max-height: 80px;" fit="scale-down" lazy draggable="false"></el-image>
+              </div>
             </div>
             <div class="gridName">{{ item.name }}</div>
           </div>
@@ -358,7 +361,6 @@ export default {
     uploadDir(){
       this.$refs.fileInput.click();
     },
-
 
     // 拖拽离开
     handleDragLeave(event){
@@ -738,6 +740,11 @@ export default {
         that.goCloseView=false;
       }, 200);
       
+    },
+
+    // 获取文件内容
+    getFileContent(fileName){
+      return url.url+"/api/getFile?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(fileName.name)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
     },
 
     // 获取到文件地址
@@ -1147,8 +1154,21 @@ export default {
 </script>
 
 <style>
+.gridIcon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imgView{
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .gridTick{
   position: absolute;
+  z-index: 10;
   left: 10px;
 }
 .gridName{
