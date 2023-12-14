@@ -275,7 +275,7 @@ export default {
       // 右键菜单选中的item
       rightClickIndex: null,
       // 是否以网格布局显示
-      showInGrid: true,
+      showInGrid: false,
       // 页面宽度
       pageWidth: 800,
     }
