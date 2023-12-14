@@ -45,11 +45,15 @@
         <div class="newFolder_button" @click="newFolderHandler">新建文件夹</div>
         <div :class="selectedList.length==1 ? 'rename_button' : 'rename_button_disabled'" @click="reNameHandler">重命名</div>
         <div :class="selectedList.length==0 ? 'del_button_disabled' : 'del_button'" @click="delHandler">删除</div>
+        <div class="viewStyle" @click="changeViewStyle">
+          <i class="bi bi-list-columns-reverse" v-if="!showInGrid"></i>
+          <i class="bi bi-grid-3x3" v-else></i>
+        </div>
       </div>
       <div class="tools" style="padding-top: 15px;padding-left: 10px;">
         <a-checkbox @change="selectAll" :checked="isAllSelected()" :indeterminate="isIndeterminate()">全选 (共{{ list.length }}个项目{{ selectedItems() }})</a-checkbox>
       </div>
-      <div class="listTitle">
+      <div class="listTitle" v-if="!showInGrid">
         <div></div>
         <div></div>
         <div>名称</div>
@@ -57,7 +61,7 @@
       </div>
     </div>
     <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
-      <div class="body">
+      <div style="margin-top: 159px;" v-if="!showInGrid">
         <div v-for="(item, index) in list" :key="index">
           <div :class="rightClickIndex==index ? 'menuItem' : 'fileItem'" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
@@ -66,6 +70,22 @@
             </div>
             <div class="fileName" @click="openItem(item)">{{ item.name }}</div>
             <div class="size" @click="openItem(item)">{{ formatBytes(item.size) }}</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 135px;" v-else class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
+        <div v-for="(item, index) in list" :key="index">
+          <div :class="rightClickIndex==index ? 'menuGridItem' : 'gridItem'" @contextmenu.prevent.stop="onContextmenu(index, item)" @click="openItem(item)">
+            <div class="gridTick">
+              <a-checkbox @change="selectFile(index)" :checked="item.selected" @click.stop="stopDefault"></a-checkbox>
+            </div>
+            <div class="gridIcon">
+              <img :src="getIconSrc(item)" v-if="getFileType(item)!='image'" width="80px" draggable="false">
+              <div v-else class="imgView">
+                <el-image :src="getFileContent(item)" style="max-width: 80px; max-height: 80px;" fit="scale-down" lazy draggable="false"></el-image>
+              </div>
+            </div>
+            <div class="gridName">{{ item.name }}</div>
           </div>
         </div>
       </div>
@@ -254,9 +274,33 @@ export default {
       isDragging: false,
       // 右键菜单选中的item
       rightClickIndex: null,
+      // 是否以网格布局显示
+      showInGrid: false,
+      // 页面宽度
+      pageWidth: 800,
     }
   },
+  computed: {
+    // 格子间隙
+    getGap(){
+      return (this.pageWidth-(this.getColumns*120)-20)/(this.getColumns-1);
+    },
+    // 一行的格子数
+    getColumns(){
+      return Math.floor((this.pageWidth-20)/120);
+    },
+  },
   methods: {
+    // 阻止冒泡事件
+    stopDefault(event){
+      event.stopPropagation();
+    },
+
+    // 切换显示模式
+    changeViewStyle(){
+      this.showInGrid=!this.showInGrid;
+    },
+
     // 处理上传的文件
     uploadFiles(formData) {
       var that=this;
@@ -318,7 +362,6 @@ export default {
       this.$refs.fileInput.click();
     },
 
-
     // 拖拽离开
     handleDragLeave(event){
       event.preventDefault();
@@ -335,8 +378,6 @@ export default {
     // 是否启用下载
     disableDownload(item){
       if(item==undefined){
-        return true;
-      }else if(item.type=="dir"){
         return true;
       }
       return false;
@@ -425,8 +466,6 @@ export default {
     // 是否可以下载
     canDownload(){
       if(this.selectedList.length==0){
-        return false;
-      }else if(this.selectedList.some(obj => obj.type === 'dir')){
         return false;
       }
       return true;
@@ -682,6 +721,13 @@ export default {
         downloadLink+="&files="+files;
         downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
         window.location.href=downloadLink;
+      }else if(item.type=="dir"){
+        var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+        const filesArray = [encodeURIComponent(item.name)];
+        const files=JSON.stringify(filesArray);
+        downloadLink+="&files="+files;
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
       }
     },
     
@@ -694,6 +740,11 @@ export default {
         that.goCloseView=false;
       }, 200);
       
+    },
+
+    // 获取文件内容
+    getFileContent(fileName){
+      return url.url+"/api/getFile?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(fileName.name)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
     },
 
     // 获取到文件地址
@@ -1043,6 +1094,17 @@ export default {
         return ", 选中"+this.selectedList.length+"个";
       }
     },
+
+    // 更新页面宽度
+    updatePageWidth(){
+      this.pageWidth=this.$refs.mainRef.clientWidth;
+    }
+  },
+
+  updated(){
+    if(!this.needLogin){
+      this.updatePageWidth();
+    }
   },
 
   created() {
@@ -1056,6 +1118,9 @@ export default {
         this.closeView();
       }
     });
+    window.onresize=()=>{
+      this.updatePageWidth();
+    }
   },
   
   watch: {
@@ -1089,6 +1154,56 @@ export default {
 </script>
 
 <style>
+.gridIcon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imgView{
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gridTick{
+  position: absolute;
+  z-index: 10;
+  left: 10px;
+}
+.gridName{
+  margin-top: 10px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.gridItem:hover{
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+}
+.menuGridItem{
+  background-color: rgb(245, 245, 245);
+}
+.gridItem, .menuGridItem{
+  padding: 10px 10px 10px 10px;
+  width: 120px;
+  position: relative;
+  transition: background-color linear .2s;
+  border-radius: 10px;
+}
+.gridView{
+  display: grid;
+  user-select: none;
+}
+.viewStyle:hover{
+  cursor: pointer;
+}
+.viewStyle{
+  font-size: 15px;
+  margin-left: auto;
+  margin-right: 10px;
+}
 .dragView{
   background-color: rgba(255, 255, 255, 0.8);
 }
@@ -1450,7 +1565,7 @@ export default {
   user-select: none;
   align-items: center;
   border-top: 1px solid rgb(245, 245, 245);
-  transition: all ease-in-out .2s;
+  transition: background-color ease-in-out .2s;
   font-weight: 400;
   padding-right: 10px;
   padding-left: 10px;
@@ -1542,10 +1657,6 @@ export default {
   padding-right: 10px;
   /* backdrop-filter: blur(15px); */
   background-color: white;
-}
-
-.body{
-  margin-top: 159px;
 }
 
 .head{
