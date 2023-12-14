@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="main" ref="mainRef" v-if="!needLogin" v-body-scroll-lock="lockScroll">
-      <div :style="{'margin-top': showInGrid ? '129px':'159px'}">
+      <div style="margin-top: 159px;" v-if="!showInGrid">
         <div v-for="(item, index) in list" :key="index">
           <div :class="rightClickIndex==index ? 'menuItem' : 'fileItem'" @contextmenu.prevent.stop="onContextmenu(index, item)">
             <div class="tick"><a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox></div>
@@ -70,6 +70,13 @@
             </div>
             <div class="fileName" @click="openItem(item)">{{ item.name }}</div>
             <div class="size" @click="openItem(item)">{{ formatBytes(item.size) }}</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 129px;" class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
+        <div v-for="(item, index) in list" :key="index">
+          <div class="gridItem">
+            {{ item.name }}
           </div>
         </div>
       </div>
@@ -259,14 +266,25 @@ export default {
       // 右键菜单选中的item
       rightClickIndex: null,
       // 是否以网格布局显示
-      showInGrid: false,
+      showInGrid: true,
+      // 页面宽度
+      pageWidth: 800,
     }
+  },
+  computed: {
+    getGap(){
+      return (this.pageWidth-(this.getColumns*120)-20)/(this.getColumns-1);
+    },
+    getColumns(){
+      return Math.floor((this.pageWidth-20)/120);
+    },
   },
   methods: {
     // 切换显示模式
     changeViewStyle(){
       this.showInGrid=!this.showInGrid;
     },
+
     // 处理上传的文件
     uploadFiles(formData) {
       var that=this;
@@ -1056,6 +1074,17 @@ export default {
         return ", 选中"+this.selectedList.length+"个";
       }
     },
+
+    // 更新页面宽度
+    updatePageWidth(){
+      this.pageWidth=this.$refs.mainRef.clientWidth;
+    }
+  },
+
+  updated(){
+    if(!this.needLogin){
+      this.updatePageWidth();
+    }
   },
 
   created() {
@@ -1069,6 +1098,9 @@ export default {
         this.closeView();
       }
     });
+    window.onresize=()=>{
+      this.updatePageWidth();
+    }
   },
   
   watch: {
@@ -1102,6 +1134,14 @@ export default {
 </script>
 
 <style>
+.gridItem{
+  height: 90px;
+  width: 120px;
+}
+.gridView{
+  display: grid;
+  user-select: none;
+}
 .viewStyle:hover{
   cursor: pointer;
 }
