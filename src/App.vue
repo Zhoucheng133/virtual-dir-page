@@ -77,7 +77,7 @@
         <div v-for="(item, index) in list" :key="index">
           <div :class="rightClickIndex==index ? 'menuGridItem' : 'gridItem'" @contextmenu.prevent.stop="onContextmenu(index, item)" @click="openItem(item)">
             <div class="gridTick">
-              <a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox>
+              <a-checkbox @change="selectFile(index)" :checked="item.selected" @click.stop="stopDefault"></a-checkbox>
             </div>
             <div class="gridIcon">
               <img :src="getIconSrc(item)" width="80px" draggable="false">
@@ -288,6 +288,11 @@ export default {
     },
   },
   methods: {
+    // 阻止冒泡事件
+    stopDefault(event){
+      event.stopPropagation();
+    },
+
     // 切换显示模式
     changeViewStyle(){
       this.showInGrid=!this.showInGrid;
