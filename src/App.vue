@@ -73,9 +73,12 @@
           </div>
         </div>
       </div>
-      <div style="margin-top: 129px;" class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
+      <div style="margin-top: 135px;" class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
         <div v-for="(item, index) in list" :key="index">
           <div class="gridItem">
+            <div class="gridTick">
+              <a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox>
+            </div>
             <div class="gridIcon">
               <img :src="getIconSrc(item)" width="80px" draggable="false">
             </div>
@@ -275,9 +278,11 @@ export default {
     }
   },
   computed: {
+    // 格子间隙
     getGap(){
       return (this.pageWidth-(this.getColumns*120)-20)/(this.getColumns-1);
     },
+    // 一行的格子数
     getColumns(){
       return Math.floor((this.pageWidth-20)/120);
     },
@@ -1137,6 +1142,10 @@ export default {
 </script>
 
 <style>
+.gridTick{
+  position: absolute;
+  left: 10px;
+}
 .gridName{
   margin-top: 10px;
   width: 100%;
@@ -1149,6 +1158,7 @@ export default {
   /* height: 120px; */
   padding-bottom: 10px;
   width: 120px;
+  position: relative;
 }
 .gridView{
   display: grid;
