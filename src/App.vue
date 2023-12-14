@@ -73,9 +73,9 @@
           </div>
         </div>
       </div>
-      <div style="margin-top: 135px;" class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
+      <div style="margin-top: 135px;" v-else class="gridView" :style="{'grid-template-columns': 'repeat('+getColumns+', 1fr)', 'gap': getGap+'px'}">
         <div v-for="(item, index) in list" :key="index">
-          <div class="gridItem">
+          <div :class="rightClickIndex==index ? 'menuGridItem' : 'gridItem'" @contextmenu.prevent.stop="onContextmenu(index, item)" @click="openItem(item)">
             <div class="gridTick">
               <a-checkbox @change="selectFile(index)" :checked="item.selected"></a-checkbox>
             </div>
@@ -1153,12 +1153,19 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.gridItem{
-  padding-top: 10px;
-  /* height: 120px; */
-  padding-bottom: 10px;
+.gridItem:hover{
+  cursor: pointer;
+  background-color: rgb(245, 245, 245);
+}
+.menuGridItem{
+  background-color: rgb(245, 245, 245);
+}
+.gridItem, .menuGridItem{
+  padding: 10px 10px 10px 10px;
   width: 120px;
   position: relative;
+  transition: background-color linear .2s;
+  border-radius: 10px;
 }
 .gridView{
   display: grid;
@@ -1533,7 +1540,7 @@ export default {
   user-select: none;
   align-items: center;
   border-top: 1px solid rgb(245, 245, 245);
-  transition: all ease-in-out .2s;
+  transition: background-color ease-in-out .2s;
   font-weight: 400;
   padding-right: 10px;
   padding-left: 10px;
