@@ -744,7 +744,7 @@ export default {
 
     // 获取文件内容
     getFileContent(fileName){
-      return url.url+"/api/getFile?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(fileName.name)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      return url.url+"/api/imgPreview?dir="+encodeURIComponent(this.nowDir)+"/"+encodeURIComponent(fileName.name)+"&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
     },
 
     // 获取到文件地址
