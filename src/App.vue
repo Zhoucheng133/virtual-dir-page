@@ -701,7 +701,7 @@ export default {
       console.log(this.selectedList[0]);
       if(item!=undefined){
         // 通过右键菜单选中的项目
-        if(item.type=='dir'){
+        if(item.type!='dir'){
           // 选中的是文件
           var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
           downloadLink+=encodeURIComponent(item.name);
