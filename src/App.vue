@@ -709,7 +709,7 @@ export default {
         downloadLink+=encodeURIComponent(this.nowView.name)
         downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
         window.location.href=downloadLink;
-      }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
+      }else if(this.selectedList.length==1){
         var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
         downloadLink+=encodeURIComponent(this.selectedList[0].name);
         downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
