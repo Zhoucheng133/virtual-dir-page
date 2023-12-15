@@ -698,37 +698,83 @@ export default {
 
     // 下载文件
     downloadHandler(item){
-      if(item!=undefined && item.type!="dir"){
-        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
-        downloadLink+=encodeURIComponent(item.name);
-        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-        window.location.href=downloadLink;
-        return;
-      }else if(this.showView){
-        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
-        downloadLink+=encodeURIComponent(this.nowView.name)
-        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-        window.location.href=downloadLink;
-      }else if(this.selectedList.length==1){
-        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
-        downloadLink+=encodeURIComponent(this.selectedList[0].name);
-        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-        window.location.href=downloadLink;
-      }else if(this.selectedList.length>1 && this.canDownload()){
-        var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
-        const filesArray = this.selectedList.map(obj => encodeURIComponent(obj.name));
-        const files=JSON.stringify(filesArray);
-        downloadLink+="&files="+files;
-        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-        window.location.href=downloadLink;
-      }else if(item.type=="dir"){
-        var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
-        const filesArray = [encodeURIComponent(item.name)];
-        const files=JSON.stringify(filesArray);
-        downloadLink+="&files="+files;
-        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
-        window.location.href=downloadLink;
+      console.log(this.selectedList[0]);
+      if(item!=undefined){
+        // 通过右键菜单选中的项目
+        if(item.type=='dir'){
+          // 选中的是文件
+          var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+          downloadLink+=encodeURIComponent(item.name);
+          downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+          window.location.href=downloadLink;
+        }else{
+          // 选中的是文件夹
+          var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+          const filesArray = [encodeURIComponent(item.name)];
+          const files=JSON.stringify(filesArray);
+          downloadLink+="&files="+files;
+          downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+          window.location.href=downloadLink;
+        }
+      }else{
+        // 通过选中的方式
+        if(this.selectedList.length==1){
+          if(this.selectedList[0].type=="dir"){
+            // 选中一个文件夹
+            var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+            const filesArray = [encodeURIComponent(this.selectedList[0].name)];
+            const files=JSON.stringify(filesArray);
+            downloadLink+="&files="+files;
+            downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+            window.location.href=downloadLink;
+          }else{
+            // 选中的是一个文件
+            var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+            downloadLink+=encodeURIComponent(this.selectedList[0].name);
+            downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+            window.location.href=downloadLink;
+          }
+        }else{
+          // 选中多个文件
+          var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+          const filesArray = this.selectedList.map(obj => encodeURIComponent(obj.name));
+          const files=JSON.stringify(filesArray);
+          downloadLink+="&files="+files;
+          downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+          window.location.href=downloadLink;
+        }
       }
+      // if(item!=undefined && item.type!="dir"){
+      //   var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+      //   downloadLink+=encodeURIComponent(item.name);
+      //   downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      //   window.location.href=downloadLink;
+      //   return;
+      // }else if(this.showView){
+      //   var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+      //   downloadLink+=encodeURIComponent(this.nowView.name)
+      //   downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      //   window.location.href=downloadLink;
+      // }else if(this.selectedList.length==1 && this.selectedList[0].type!="dir"){
+      //   var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+      //   downloadLink+=encodeURIComponent(this.selectedList[0].name);
+      //   downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      //   window.location.href=downloadLink;
+      // }else if(this.selectedList.length>1 && this.canDownload()){
+      //   var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+      //   const filesArray = this.selectedList.map(obj => encodeURIComponent(obj.name));
+      //   const files=JSON.stringify(filesArray);
+      //   downloadLink+="&files="+files;
+      //   downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      //   window.location.href=downloadLink;
+      // }else if(item.type=="dir" || (this.selectedList.length==1 && this.selectedList[0].type=="dir")){
+      //   var downloadLink=url.url+"/api/multiDownload?dir="+encodeURIComponent(this.nowDir)+"/";
+      //   const filesArray = [encodeURIComponent(item.name)];
+      //   const files=JSON.stringify(filesArray);
+      //   downloadLink+="&files="+files;
+      //   downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+      //   window.location.href=downloadLink;
+      // }
     },
     
     // 关闭预览
