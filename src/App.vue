@@ -699,7 +699,12 @@ export default {
     // 下载文件
     downloadHandler(item){
       console.log(this.selectedList[0]);
-      if(item!=undefined){
+      if(this.showView){
+        var downloadLink=url.url+"/api/downloadFile?dir="+encodeURIComponent(this.nowDir)+"/";
+        downloadLink+=encodeURIComponent(this.nowView.name);
+        downloadLink+="&username="+localStorage.getItem("username")+"&password="+localStorage.getItem("password");
+        window.location.href=downloadLink;
+      }else if(item!=undefined){
         // 通过右键菜单选中的项目
         if(item.type!='dir'){
           // 选中的是文件
