@@ -137,6 +137,7 @@ let inputFileName=ref("");
 let formerName=ref("")
 let showNewFolderModal=ref(false);
 let inputNewFolder=ref("");
+document.title="虚拟目录";
 const uploadDirHandler=()=>{
   const fileInput=document.getElementById('fileInput');
   fileInput.click();
