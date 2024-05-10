@@ -87,7 +87,8 @@
               <div>
                 <div class="gridImg">
                   <img :src="stores().getIconSrc(item)" height="50px" draggable="false" v-if="item.type!='image'">
-                  <img v-lazy="stores().imgPreview(item.fileName)" height="50px" v-else>
+                  <img v-lazy="stores().imgPreview(item.fileName)" style="max-width: 50px; max-height: 50px;" v-else>
+                  <!-- <img :src="stores().getIconSrc(item)" height="50px" draggable="false"> -->
                 </div>
                 <div class="gridText">{{ item.fileName }}</div>
               </div>
@@ -209,7 +210,10 @@ body{
 .gridImg{
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
+  height: 50px;
+  width: 100px;
 }
 .gridText{
   width: 100%;
