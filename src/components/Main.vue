@@ -2,13 +2,18 @@
   <div class="body" @dragenter.prevent="drag().handleDragEnter">
     <div class="mainPage" :style="{width: pageWidth+'px'}">
       <div class="fixedArea" :style="{width: pageWidth+'px'}">
-        <div class="head" >
+        <div class="head" v-if="stores().enableRead">
           <div class="pathItem" v-for="(item, index) in stores().path" :key="index" :style="{marginLeft: index==0 ? '10px' : '0'}" @click="stores().toDir(item)">
             <i class="bi bi-arrow-right-short" v-if="index!=0"></i><div class="pathText" :style="{fontWeight: index==stores().path.length-1 ? 'bold' : 'normal', color: index==stores().path.length-1 ? '#1677ff' : 'grey'}">{{ item }}</div>
           </div>
         </div>
+        <div class="head" v-else>
+          <div class="pathItem" style="margin-left: 10px;">
+            <div class="pathText" style="font-weight: bold; color: #1677ff;">简易模式</div>
+          </div>
+        </div>
         <div class="opHead">
-          <a-upload v-model:file-list="upload().fileList" :action="upload().uploadURL()" :showUploadList="false" :multiple="true">
+          <a-upload v-model:file-list="upload().fileList" :action="upload().uploadURL()" :showUploadList="false" :multiple="true" :before-upload="beforeUpload">
             <a-dropdown-button type="primary">
               上传
               <template #overlay>
@@ -130,6 +135,7 @@ import upload from '../stores/upload';
 import UploadPanel from './UploadPanel.vue';
 import DragView from './DragView.vue';
 import drag from "../stores/drag";
+import { message } from 'ant-design-vue';
 const pageWidth=ref(1000);
 let previewIn=ref(true);
 let showRenameModel=ref(false);
@@ -138,7 +144,18 @@ let formerName=ref("")
 let showNewFolderModal=ref(false);
 let inputNewFolder=ref("");
 document.title="虚拟目录";
+const beforeUpload=()=>{
+  if(!stores().enableWrite){
+    message.error("权限不允许")
+    return false;
+  }
+  return true;
+}
 const uploadDirHandler=()=>{
+  if(!stores().enableWrite){
+    message.error("权限不允许")
+    return;
+  }
   const fileInput=document.getElementById('fileInput');
   fileInput.click();
 }
@@ -147,10 +164,15 @@ const okNewFolder=()=>{
   showNewFolderModal.value=false;
 }
 const renameModal=(item)=>{
+  
   formerName.value=item.fileName;
   showRenameModel.value=true;
 }
 const newFolderModal=()=>{
+  if(!stores().enableWrite){
+    message.error("权限不允许")
+    return;
+  }
   showNewFolderModal.value=true;
 }
 const okRename=()=>{

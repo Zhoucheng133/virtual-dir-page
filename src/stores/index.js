@@ -104,6 +104,9 @@ export default defineStore('index', ()=>{
   }
 
   const getData=async ()=>{
+    if(!enableRead.value){
+      return;
+    }
     const response=await axios.get(baseURL+'/api/getData', {
       params: {
         path: encodeURIComponent(JSON.stringify(path.value.slice(1))),
@@ -264,6 +267,10 @@ export default defineStore('index', ()=>{
   }
 
   const delHandler=(items)=>{
+    if(!enableDel.value){
+      message.error("权限不允许");
+      return;
+    }
     Modal.confirm({
       title: "确定要删除这个(些)文件/文件夹吗",
       content: '这是一个不可撤销的操作',
@@ -335,6 +342,8 @@ export default defineStore('index', ()=>{
     userData,
     gridStyle,
     toggleViewStyle,
-    imgPreview
+    imgPreview,
+    enableWrite,
+    enableRead
   };
 })
