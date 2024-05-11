@@ -22,8 +22,8 @@ export default defineStore('index', ()=>{
 
   let path=ref(['根目录']);
   let data=ref([]);
-  // const baseURL="http://127.0.0.1:8088";
-  const baseURL="";
+  const baseURL="http://127.0.0.1:8088";
+  // const baseURL="";
 
   let gridStyle=ref(false);
   let isLogin=ref(false);
@@ -38,6 +38,9 @@ export default defineStore('index', ()=>{
     item: {},
     link: '',
   });
+  let enableRead=ref(false);
+  let enableWrite=ref(false);
+  let enableDel=ref(false);
 
   const toggleViewStyle=()=>{
     gridStyle.value=!gridStyle.value;
@@ -62,7 +65,7 @@ export default defineStore('index', ()=>{
 
   const init=async ()=>{
     const needLogin=await axios.get(baseURL+'/api/needLogin');
-    if(needLogin.data==false){
+    if(needLogin.data.rlt==false){
       isLogin.value=true;
     }else{
       const userData=localStorage.getItem('userData');
@@ -71,6 +74,9 @@ export default defineStore('index', ()=>{
         await loginController(jsonData.username, jsonData.password);
       }
     }
+    enableWrite.value=needLogin.data.write;
+    enableRead.value=needLogin.data.read;
+    enableDel.value=needLogin.data.del;
     loading.value=false;
   }
 
