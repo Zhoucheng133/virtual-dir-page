@@ -22,8 +22,8 @@ export default defineStore('index', ()=>{
 
   let path=ref(['根目录']);
   let data=ref([]);
-  // const baseURL="http://127.0.0.1:8088";
-  const baseURL="";
+  const baseURL="http://127.0.0.1:8081";
+  // const baseURL="";
 
   let gridStyle=ref(false);
   let isLogin=ref(false);
@@ -109,7 +109,7 @@ export default defineStore('index', ()=>{
     }
     const response=await axios.get(baseURL+'/api/getData', {
       params: {
-        path: encodeURIComponent(JSON.stringify(path.value.slice(1))),
+        path: JSON.stringify(path.value.slice(1)),
         username: userData.value.username,
         password: CryptoJS.SHA256(userData.value.password).toString()
       }
@@ -158,7 +158,7 @@ export default defineStore('index', ()=>{
 
   const openHandler=(item)=>{
     if(item.isFile){
-      preview.value.link=`${baseURL}/api/getFile?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${encodeURIComponent(JSON.stringify([...path.value, item.fileName].slice(1)))}`;
+      preview.value.link=`${baseURL}/api/getFile?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value, item.fileName].slice(1))}`;
       preview.value.item=item;
     }else{
       path.value.push(item.fileName);
@@ -218,12 +218,12 @@ export default defineStore('index', ()=>{
   }
 
   const multiDownload=(items)=>{
-    window.location.href=`${baseURL}/api/multidownload?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${encodeURIComponent(JSON.stringify([...path.value].slice(1)))}&files=${JSON.stringify(items)}`;
+    window.location.href=`${baseURL}/api/multidownload?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value].slice(1))}&files=${JSON.stringify(items)}`;
   }
 
   const downloadHandler=(item)=>{
     if(item.isFile){
-      window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${encodeURIComponent(SON.stringify([...path.value, item.fileName].slice(1)))}`;
+      window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${SON.stringify([...path.value, item.fileName].slice(1))}`;
     }else{
       multiDownload([item])
     }
@@ -232,7 +232,7 @@ export default defineStore('index', ()=>{
   const renameHandler=(oldName, newName)=>{
     axios.post(baseURL+"/api/rename", null, {
       params: {
-        path: encodeURIComponent(JSON.stringify(path.value.slice(1))),
+        path: JSON.stringify(path.value.slice(1)),
         oldName: oldName,
         newName: newName,
         username: userData.value.username,
@@ -251,7 +251,7 @@ export default defineStore('index', ()=>{
   const newFolderHandler=(name)=>{
     axios.post(baseURL+'/api/newFolder', null, {
       params: {
-        path: encodeURIComponent(JSON.stringify(path.value.slice(1))),
+        path: JSON.stringify(path.value.slice(1)),
         name: name,
         username: userData.value.username,
         password: CryptoJS.SHA256(userData.value.password).toString()
@@ -289,7 +289,7 @@ export default defineStore('index', ()=>{
         
         axios.post(baseURL+'/api/del', null, {
           params: {
-            path: encodeURIComponent(JSON.stringify(path.value.slice(1))),
+            path: JSON.stringify(path.value.slice(1)),
             items: items==undefined ? JSON.stringify(selectedList) : JSON.stringify([items.fileName]),
             username: userData.value.username,
             password: CryptoJS.SHA256(userData.value.password).toString()
@@ -314,7 +314,7 @@ export default defineStore('index', ()=>{
   }
 
   const imgPreview=(fileName)=>{
-    return `${baseURL}/api/imgPreview?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${encodeURIComponent(JSON.stringify([...path.value.slice(1), fileName]))}`;
+    return `${baseURL}/api/imgPreview?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value.slice(1), fileName])}`;
   }
 
   return {
