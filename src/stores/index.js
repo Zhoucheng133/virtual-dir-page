@@ -223,7 +223,7 @@ export default defineStore('index', ()=>{
 
   const downloadHandler=(item)=>{
     if(item.isFile){
-      window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${SON.stringify([...path.value, item.fileName].slice(1))}`;
+      window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value, item.fileName].slice(1))}`;
     }else{
       multiDownload([item])
     }
