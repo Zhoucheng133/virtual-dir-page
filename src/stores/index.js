@@ -205,27 +205,37 @@ export default defineStore('index', ()=>{
 
   const mainDownload=()=>{
     let selectedList=[];
+    let isFile=false;
     data.value.forEach(item=>{
       if(item.isSelected){
         selectedList.push(item.fileName);
+        if(item.isFile){
+          isFile=true;
+        }
       }
     })
-    if(selectedList.length==1){
-      downloadHandler(selectedList[0]);
+    if(selectedList.length==1 && isFile){
+      fileDownload(selectedList[0]);
     }else{
-      multiDownload(selectedList);
+      archiveDownload(selectedList);
     }
   }
 
-  const multiDownload=(items)=>{
-    window.location.href=`${baseURL}/api/multidownload?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value].slice(1))}&files=${JSON.stringify(items)}`;
+  const fileDownload=(item)=>{
+    const url=window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value, item].slice(1))}`;
+    window.location.href=url;
   }
 
-  const downloadHandler=(item)=>{
+  const archiveDownload=(items)=>{
+    const url=`${baseURL}/api/multidownload?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value].slice(1))}&files=${JSON.stringify(items)}`
+    window.location.href=url;
+  }
+
+  const menuDownload=(item)=>{
     if(item.isFile){
       window.location.href=`${baseURL}/api/download?username=${userData.value.username}&password=${CryptoJS.SHA256(userData.value.password).toString()}&path=${JSON.stringify([...path.value, item.fileName].slice(1))}`;
     }else{
-      multiDownload([item])
+      archiveDownload([item.fileName]);
     }
   }
 
@@ -333,7 +343,8 @@ export default defineStore('index', ()=>{
     toDir, 
     preview, 
     setPreview, 
-    downloadHandler, 
+    fileDownload, 
+    menuDownload, 
     mainDownload, 
     renameHandler,
     newFolderHandler,

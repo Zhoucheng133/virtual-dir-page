@@ -77,7 +77,7 @@
                 <a-menu>
                   <a-menu-item @click="stores().openHandler(item)">打开</a-menu-item>
                   <a-menu-divider />
-                  <a-menu-item @click="stores().downloadHandler(item)"><i class="bi bi-download" style="margin-right: 10px;"></i>下载</a-menu-item>
+                  <a-menu-item @click="stores().menuDownload(item)"><i class="bi bi-download" style="margin-right: 10px;"></i>下载</a-menu-item>
                   <a-menu-divider />
                   <a-menu-item @click="renameModal(item)"><i class="bi bi-pen" style="margin-right: 10px;"></i>重命名</a-menu-item>
                   <a-menu-item @click="stores().delHandler(item)"><i class="bi bi-trash3" style="margin-right: 10px;"></i>删除</a-menu-item>
@@ -101,7 +101,7 @@
                 <a-menu>
                   <a-menu-item @click="stores().openHandler(item)">打开</a-menu-item>
                   <a-menu-divider />
-                  <a-menu-item @click="stores().downloadHandler(item)"><i class="bi bi-download" style="margin-right: 10px;"></i>下载</a-menu-item>
+                  <a-menu-item @click="stores().menuDownload(item)"><i class="bi bi-download" style="margin-right: 10px;"></i>下载</a-menu-item>
                   <a-menu-divider />
                   <a-menu-item @click="renameModal(item)"><i class="bi bi-pen" style="margin-right: 10px;"></i>重命名</a-menu-item>
                   <a-menu-item @click="stores().delHandler(item)"><i class="bi bi-trash3" style="margin-right: 10px;"></i>删除</a-menu-item>
