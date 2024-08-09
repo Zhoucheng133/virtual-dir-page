@@ -5,10 +5,10 @@
     <div class="closeButton" @click="closePreview"><i class="bi bi-x"></i></div>
   </div>
   <div class="previewMain">
-    <vue-plyr v-if="stores().preview.item.type=='video'">
+    <vue-plyr v-if="stores().preview.item.type=='video'" :options="options">
       <video controls crossorigin playsinline :src="stores().preview.link"></video>
     </vue-plyr>
-    <vue-plyr v-else-if="stores().preview.item.type=='audio'">
+    <vue-plyr v-else-if="stores().preview.item.type=='audio'" :options="options">
       <audio controls crossorigin playsinline :src="stores().preview.link"></audio>
     </vue-plyr>
     <img v-else-if="stores().preview.item.type=='image'" :src="stores().preview.link" alt="" class="imagePreview">
@@ -32,6 +32,12 @@ window.addEventListener("keydown", (event)=>{
     closePreview();
   }
 })
+const options = {
+  i18n: {
+    speed: '速度',
+    normal: '默认'
+  }
+}
 </script>
 
 <style>
